@@ -2,35 +2,76 @@
 //  Fising_Touch_GameTests.swift
 //  Fising-Touch-GameTests
 //
-//  Created by kyosuke on 2026/04/16.
+//  Created by Codex on 2026/04/16.
 //
 
 import XCTest
 @testable import Fising_Touch_Game
 
+@MainActor
 final class Fising_Touch_GameTests: XCTestCase {
+    func testPurchaseBaitConsumesCoinAndAddsOwnership() {
+        let repository = InMemoryRepository(data: GameMaster.initialData)
+        let store = AppGameStore(repository: repository)
+        let premiumBait = try! XCTUnwrap(GameMaster.bait(id: "premium_bait"))
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        let purchased = store.purchaseBait(premiumBait)
+
+        XCTAssertTrue(purchased)
+        XCTAssertTrue(store.isOwned(baitId: premiumBait.id))
+        XCTAssertEqual(store.userData.coin, GameMaster.initialData.coin - premiumBait.price)
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    func testRegisterCatchUnlocksEncyclopediaAndStoresHistory() {
+        let repository = InMemoryRepository(data: GameMaster.initialData)
+        let store = AppGameStore(repository: repository)
+        let caughtFish = CaughtFish(
+            id: UUID().uuidString,
+            fishId: "aji",
+            fishName: "アジ",
+            rarity: 2,
+            weight: 0.8,
+            rewardCoin: 100,
+            caughtAt: Date(timeIntervalSince1970: 1_000)
+        )
+
+        let result = store.registerCatch(caughtFish)
+        let entry = store.encyclopediaEntry(for: "aji")
+
+        XCTAssertTrue(result.isNewFish)
+        XCTAssertTrue(result.isNewRecord)
+        XCTAssertEqual(store.userData.catchHistory.first?.fishId, "aji")
+        XCTAssertEqual(store.userData.coin, GameMaster.initialData.coin + 100)
+        XCTAssertEqual(entry?.caughtCount, 1)
+        XCTAssertEqual(entry?.maxWeight, 0.8)
+        XCTAssertTrue(entry?.isUnlocked == true)
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func testSelectingOwnedBaitUpdatesCurrentBait() {
+        var initial = GameMaster.initialData
+        initial.ownedBaitIds.append("premium_bait")
+        let repository = InMemoryRepository(data: initial)
+        let store = AppGameStore(repository: repository)
+        let premiumBait = try! XCTUnwrap(GameMaster.bait(id: "premium_bait"))
+
+        store.selectBait(premiumBait)
+
+        XCTAssertEqual(store.selectedBait.id, "premium_bait")
+    }
+}
+
+private final class InMemoryRepository: UserGameDataRepositoryProtocol {
+    private var storedData: UserGameData
+
+    init(data: UserGameData) {
+        self.storedData = data
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    func load() throws -> UserGameData {
+        storedData
     }
 
+    func save(_ data: UserGameData) throws {
+        storedData = data
+    }
 }

@@ -6,6 +6,17 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		6CD72FE02F8FF15000CDF883 /* FishList.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 6CD72FDC2F8FF15000CDF883 /* FishList.PNG */; };
+		6CD72FE12F8FF15000CDF883 /* Result.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 6CD72FDE2F8FF15000CDF883 /* Result.PNG */; };
+		6CD72FE22F8FF15000CDF883 /* Shop.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 6CD72FDF2F8FF15000CDF883 /* Shop.PNG */; };
+		6CD72FE32F8FF15000CDF883 /* FishDetail.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 6CD72FD92F8FF15000CDF883 /* FishDetail.PNG */; };
+		6CD72FE42F8FF15000CDF883 /* Fishing.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 6CD72FDA2F8FF15000CDF883 /* Fishing.PNG */; };
+		6CD72FE52F8FF15000CDF883 /* Home.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 6CD72FDD2F8FF15000CDF883 /* Home.PNG */; };
+		6CD72FE62F8FF15000CDF883 /* FishingResult.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 6CD72FDB2F8FF15000CDF883 /* FishingResult.PNG */; };
+		6CD72FE82F8FF20D00CDF883 /* spec.md in Resources */ = {isa = PBXBuildFile; fileRef = 6CD72FE72F8FF20D00CDF883 /* spec.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		6CD72FBD2F8FECFE00CDF883 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +38,14 @@
 		6CD72FAF2F8FECFA00CDF883 /* Fising-Touch-Game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Fising-Touch-Game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CD72FBC2F8FECFE00CDF883 /* Fising-Touch-GameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Fising-Touch-GameTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CD72FC62F8FECFE00CDF883 /* Fising-Touch-GameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Fising-Touch-GameUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6CD72FD92F8FF15000CDF883 /* FishDetail.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FishDetail.PNG; sourceTree = "<group>"; };
+		6CD72FDA2F8FF15000CDF883 /* Fishing.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Fishing.PNG; sourceTree = "<group>"; };
+		6CD72FDB2F8FF15000CDF883 /* FishingResult.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FishingResult.PNG; sourceTree = "<group>"; };
+		6CD72FDC2F8FF15000CDF883 /* FishList.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FishList.PNG; sourceTree = "<group>"; };
+		6CD72FDD2F8FF15000CDF883 /* Home.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Home.PNG; sourceTree = "<group>"; };
+		6CD72FDE2F8FF15000CDF883 /* Result.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Result.PNG; sourceTree = "<group>"; };
+		6CD72FDF2F8FF15000CDF883 /* Shop.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Shop.PNG; sourceTree = "<group>"; };
+		6CD72FE72F8FF20D00CDF883 /* spec.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = spec.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -79,6 +98,14 @@
 				6CD72FBF2F8FECFE00CDF883 /* Fising-Touch-GameTests */,
 				6CD72FC92F8FECFE00CDF883 /* Fising-Touch-GameUITests */,
 				6CD72FB02F8FECFA00CDF883 /* Products */,
+				6CD72FD92F8FF15000CDF883 /* FishDetail.PNG */,
+				6CD72FDA2F8FF15000CDF883 /* Fishing.PNG */,
+				6CD72FDB2F8FF15000CDF883 /* FishingResult.PNG */,
+				6CD72FDC2F8FF15000CDF883 /* FishList.PNG */,
+				6CD72FDD2F8FF15000CDF883 /* Home.PNG */,
+				6CD72FDE2F8FF15000CDF883 /* Result.PNG */,
+				6CD72FDF2F8FF15000CDF883 /* Shop.PNG */,
+				6CD72FE72F8FF20D00CDF883 /* spec.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -212,6 +239,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6CD72FE82F8FF20D00CDF883 /* spec.md in Resources */,
+				6CD72FE02F8FF15000CDF883 /* FishList.PNG in Resources */,
+				6CD72FE12F8FF15000CDF883 /* Result.PNG in Resources */,
+				6CD72FE22F8FF15000CDF883 /* Shop.PNG in Resources */,
+				6CD72FE32F8FF15000CDF883 /* FishDetail.PNG in Resources */,
+				6CD72FE42F8FF15000CDF883 /* Fishing.PNG in Resources */,
+				6CD72FE52F8FF15000CDF883 /* Home.PNG in Resources */,
+				6CD72FE62F8FF15000CDF883 /* FishingResult.PNG in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
