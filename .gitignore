@@ -80,3 +80,5 @@ playground.xcworkspace
 
 # extra
 img/
+docs/
+.DS_Store
