@@ -1,22 +1,16 @@
-//
-//  UserGameDataRepository.swift
-//  Fising-Touch-Game
-//
-//  Created by Codex on 2026/04/16.
-//
-
 import Foundation
 
-protocol UserGameDataRepositoryProtocol {
-    func load() throws -> UserGameData
-    func save(_ data: UserGameData) throws
-}
-
-final class UserGameDataRepository: UserGameDataRepositoryProtocol {
+/// `UserGameDataRepository` のファイル保存実装。
+final class UserGameDataRepositoryImpl: UserGameDataRepository {
+    /// ファイル操作に使用するFileManager。
     private let fileManager: FileManager
+    /// 保存時に使うエンコーダ。
     private let encoder: JSONEncoder
+    /// 読み込み時に使うデコーダ。
     private let decoder: JSONDecoder
 
+    /// リポジトリを生成する。
+    /// - Parameter fileManager: 利用するFileManager。
     init(fileManager: FileManager = .default) {
         self.fileManager = fileManager
         self.encoder = JSONEncoder()
@@ -26,25 +20,30 @@ final class UserGameDataRepository: UserGameDataRepositoryProtocol {
         decoder.dateDecodingStrategy = .iso8601
     }
 
+    /// 永続化済みのユーザーデータを読み込む。
+    /// - Returns: 読み込んだユーザーデータ。
     func load() throws -> UserGameData {
         let url = try dataURL()
         guard fileManager.fileExists(atPath: url.path) else {
-            let initial = GameMaster.initialData
-            try save(initial)
-            return initial
+            let initialData = GameMaster.initialData
+            try save(initialData)
+            return initialData
         }
 
         let data = try Data(contentsOf: url)
         return try decoder.decode(UserGameData.self, from: data)
     }
 
+    /// ユーザーデータを保存する。
+    /// - Parameter data: 保存対象のユーザーデータ。
     func save(_ data: UserGameData) throws {
         let url = try dataURL()
-        let encoded = try encoder.encode(data)
-        try encoded.write(to: url, options: .atomic)
+        let encodedData = try encoder.encode(data)
+        try encodedData.write(to: url, options: .atomic)
     }
 
-    /// Documents配下の永続化パスを1箇所にまとめる。
+    /// 保存先URLを返す。
+    /// - Returns: 保存先URL。
     private func dataURL() throws -> URL {
         guard let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
             throw CocoaError(.fileNoSuchFile)

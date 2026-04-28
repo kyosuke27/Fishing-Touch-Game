@@ -1,13 +1,8 @@
-//
-//  GameMaster.swift
-//  Fising-Touch-Game
-//
-//  Created by Codex on 2026/04/16.
-//
-
 import Foundation
 
+/// ゲーム内で固定のマスタデータを提供する定義群。
 enum GameMaster {
+    /// 魚マスタ一覧。
     static let fishes: [FishMaster] = [
         FishMaster(
             id: "medaka",
@@ -50,6 +45,7 @@ enum GameMaster {
         )
     ]
 
+    /// 餌マスタ一覧。
     static let baits: [BaitMaster] = [
         BaitMaster(
             id: "normal_bait",
@@ -69,6 +65,7 @@ enum GameMaster {
         )
     ]
 
+    /// 初期ユーザーデータ。
     static let initialData = UserGameData(
         coin: 500,
         selectedBaitId: "normal_bait",
@@ -86,10 +83,16 @@ enum GameMaster {
         }
     )
 
+    /// 魚IDからマスタを取得する。
+    /// - Parameter id: 魚ID。
+    /// - Returns: 見つかった魚マスタ。
     static func fish(id: String) -> FishMaster? {
         fishes.first { $0.id == id }
     }
 
+    /// 餌IDからマスタを取得する。
+    /// - Parameter id: 餌ID。
+    /// - Returns: 見つかった餌マスタ。
     static func bait(id: String) -> BaitMaster? {
         baits.first { $0.id == id }
     }

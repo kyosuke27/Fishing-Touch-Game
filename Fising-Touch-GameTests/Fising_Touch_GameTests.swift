@@ -12,7 +12,7 @@ import XCTest
 final class Fising_Touch_GameTests: XCTestCase {
     func testPurchaseBaitConsumesCoinAndAddsOwnership() {
         let repository = InMemoryRepository(data: GameMaster.initialData)
-        let store = AppGameStore(repository: repository)
+        let store = GameSessionStore(repository: repository)
         let premiumBait = try! XCTUnwrap(GameMaster.bait(id: "premium_bait"))
 
         let purchased = store.purchaseBait(premiumBait)
@@ -24,7 +24,7 @@ final class Fising_Touch_GameTests: XCTestCase {
 
     func testRegisterCatchUnlocksEncyclopediaAndStoresHistory() {
         let repository = InMemoryRepository(data: GameMaster.initialData)
-        let store = AppGameStore(repository: repository)
+        let store = GameSessionStore(repository: repository)
         let caughtFish = CaughtFish(
             id: UUID().uuidString,
             fishId: "aji",
@@ -51,7 +51,7 @@ final class Fising_Touch_GameTests: XCTestCase {
         var initial = GameMaster.initialData
         initial.ownedBaitIds.append("premium_bait")
         let repository = InMemoryRepository(data: initial)
-        let store = AppGameStore(repository: repository)
+        let store = GameSessionStore(repository: repository)
         let premiumBait = try! XCTUnwrap(GameMaster.bait(id: "premium_bait"))
 
         store.selectBait(premiumBait)
@@ -60,7 +60,7 @@ final class Fising_Touch_GameTests: XCTestCase {
     }
 }
 
-private final class InMemoryRepository: UserGameDataRepositoryProtocol {
+private final class InMemoryRepository: UserGameDataRepository {
     private var storedData: UserGameData
 
     init(data: UserGameData) {
