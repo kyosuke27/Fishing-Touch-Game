@@ -36,8 +36,8 @@ final class HomeScreenViewModel: ObservableObject {
     private static func makeState(from store: GameSessionStore) -> HomeState {
         HomeState(
             coin: store.userData.coin,
+            selectedBaitId: store.selectedBait.id,
             selectedBaitName: store.selectedBait.name,
-            selectedBaitAssetName: store.selectedBait.assetName,
             unlockedFishCount: store.unlockedFishCount
         )
     }
