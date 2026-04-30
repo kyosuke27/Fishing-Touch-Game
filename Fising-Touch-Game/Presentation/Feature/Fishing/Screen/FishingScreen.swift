@@ -33,38 +33,64 @@ struct FishingScreen: View {
     }
 
     var body: some View {
-        ZStack {
-            OceanBackground()
+        GeometryReader { geometry in
+            ZStack {
+                fishingBackground(size: geometry.size)
 
-            VStack(spacing: 22) {
-                header
-                counters
-                Spacer(minLength: 20)
-                fishingArea
-                Spacer()
-            }
-            .padding(.horizontal, 20)
-            .padding(.top, 16)
-            .padding(.bottom, 32)
+                VStack(spacing: 22) {
+                    header
+                    counters
+                    Spacer(minLength: 20)
+                    fishingArea(size: geometry.size)
+                    Spacer()
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 16)
+                .padding(.bottom, 32)
 
-            if let result = viewModel.state.result {
-                ResultOverlay(
-                    result: result,
-                    onRetry: {
-                        viewModel.restart()
-                        lastUpdate = nil
-                    },
-                    onClose: {
-                        dismiss()
-                    }
-                )
+                if let result = viewModel.state.result {
+                    ResultOverlay(
+                        result: result,
+                        onRetry: {
+                            viewModel.restart()
+                            lastUpdate = nil
+                        },
+                        onClose: {
+                            dismiss()
+                        }
+                    )
+                }
             }
         }
+        .ignoresSafeArea()
         .onReceive(timer) { date in
             let delta = date.timeIntervalSince(lastUpdate ?? date)
             lastUpdate = date
             viewModel.update(deltaTime: delta)
         }
+    }
+
+    /// 釣り画面の背景を表示する。
+    /// - Parameter size: 画面の表示サイズ。
+    /// - Returns: クリップ済み背景View。
+    private func fishingBackground(size: CGSize) -> some View {
+        Image("HomeBackground")
+            .resizable()
+            .scaledToFill()
+            .frame(width: size.width, height: size.height, alignment: .topLeading)
+            .clipped()
+            .ignoresSafeArea()
+            .overlay(
+                LinearGradient(
+                    colors: [
+                        Color.white.opacity(0.10),
+                        Color.white.opacity(0.24),
+                        GameTheme.background.opacity(0.58)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
     }
 
     /// ヘッダー表示。
@@ -112,7 +138,10 @@ struct FishingScreen: View {
     }
 
     /// 釣り操作エリア。
-    private var fishingArea: some View {
+    /// 釣り操作エリアを表示する。
+    /// - Parameter size: 親画面の表示サイズ。
+    /// - Returns: 釣り操作エリアView。
+    private func fishingArea(size: CGSize) -> some View {
         VStack(spacing: 26) {
             VStack(spacing: 10) {
                 FishBadge(fish: viewModel.state.targetFish, size: 92)
@@ -131,9 +160,10 @@ struct FishingScreen: View {
             } label: {
                 Image("TapButton")
                     .resizable()
-                    .scaledToFit()
-                    .frame(height: 96)
+                    .scaledToFill()
+                    .frame(width:size.width*0.5,height: size.height*0.1)
                     .opacity(viewModel.state.result != nil ? 0.6 : 1)
+                    .background(.gray)
             }
             .buttonStyle(.plain)
             .disabled(viewModel.state.result != nil)
