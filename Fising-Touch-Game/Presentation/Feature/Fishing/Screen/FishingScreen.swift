@@ -22,6 +22,16 @@ struct FishingScreen: View {
         self._viewModel = StateObject(wrappedValue: FishingScreenViewModel(store: store))
     }
 
+    /// 選択中餌の表示画像名。
+    private var baitImageName: String {
+        switch store.selectedBait.id {
+        case "premium_bait":
+            "Ebi"
+        default:
+            "Esa"
+        }
+    }
+
     var body: some View {
         ZStack {
             OceanBackground()
@@ -73,8 +83,16 @@ struct FishingScreen: View {
             Spacer()
 
             VStack(alignment: .trailing, spacing: 8) {
-                StatusPill(title: "\(store.userData.coin)", systemImage: "centsign.circle.fill")
-                StatusPill(title: store.selectedBait.name, systemImage: store.selectedBait.assetName)
+                FishingStatusCard(
+                    title: String(localized: "home.coin"),
+                    value: "\(store.userData.coin)",
+                    imageName: "Coin"
+                )
+                FishingStatusCard(
+                    title: String(localized: "home.selectedBait"),
+                    value: store.selectedBait.name,
+                    imageName: baitImageName
+                )
             }
         }
     }
@@ -111,23 +129,11 @@ struct FishingScreen: View {
             Button {
                 viewModel.tap()
             } label: {
-                Text(String(localized: "fishing.tap"))
-                    .font(.system(size: 34, weight: .heavy, design: .rounded))
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 24)
-                    .background(
-                        LinearGradient(
-                            colors: [GameTheme.mainBlue, Color.blue.opacity(0.85)],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        ),
-                        in: RoundedRectangle(cornerRadius: 30, style: .continuous)
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 30, style: .continuous)
-                            .stroke(.white.opacity(0.75), lineWidth: 2)
-                    )
+                Image("TapButton")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 96)
+                    .opacity(viewModel.state.result != nil ? 0.6 : 1)
             }
             .buttonStyle(.plain)
             .disabled(viewModel.state.result != nil)
