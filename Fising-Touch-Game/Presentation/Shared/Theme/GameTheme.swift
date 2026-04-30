@@ -76,7 +76,8 @@ struct GlassCardModifier: ViewModifier {
     /// - Returns: 装飾済みView。
     func body(content: Content) -> some View {
         content
-            .padding()
+            .padding(.horizontal,8)
+            .padding(.vertical,4)
             .background(GameTheme.card.opacity(0.9), in: RoundedRectangle(cornerRadius: 24, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 24, style: .continuous)

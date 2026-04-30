@@ -125,10 +125,6 @@ struct FishingScreen: View {
     private var counters: some View {
         VStack(spacing: 12) {
             CounterCard(
-                title: String(localized: "fishing.counter.hit"),
-                value: "\(viewModel.state.successCount) / \(viewModel.state.targetFish.requiredHits)"
-            )
-            CounterCard(
                 title: String(localized: "fishing.counter.combo"),
                 value: "\(viewModel.state.successCount)"
             )
@@ -142,13 +138,7 @@ struct FishingScreen: View {
     private func fishingArea(size: CGSize) -> some View {
         VStack(spacing: 26) {
             VStack(spacing: 10) {
-                FishBadge(fish: viewModel.state.targetFish, size: 92)
-                Text("\(String(localized: "fishing.target")): \(viewModel.state.targetFish.name)")
-                    .font(.title3.bold())
-                    .foregroundStyle(GameTheme.textPrimary)
-                Text("\(String(localized: "fishing.weight")) \(viewModel.state.currentWeight.formattedWeight)")
-                    .font(.headline)
-                    .foregroundStyle(GameTheme.textSecondary)
+                FishBadge(fish: viewModel.state.targetFish, size: 92, isHidden: true)
             }
 
             FishingHitBar(state: viewModel.state)

@@ -6,6 +6,19 @@ struct FishBadge: View {
     let fish: FishMaster
     /// バッジサイズ。
     let size: CGFloat
+    /// 魚画像を秘匿表示にするか。
+    let isHidden: Bool
+
+    /// FishBadgeを生成する。
+    /// - Parameters:
+    ///   - fish: 表示対象の魚。
+    ///   - size: バッジサイズ。
+    ///   - isHidden: 魚画像を秘匿表示にするか。
+    init(fish: FishMaster, size: CGFloat, isHidden: Bool = false) {
+        self.fish = fish
+        self.size = size
+        self.isHidden = isHidden
+    }
 
     var body: some View {
         ZStack {
@@ -19,7 +32,7 @@ struct FishBadge: View {
                 )
                 .frame(width: size, height: size)
 
-            Image(fish.displayImageName)
+            Image(isHidden ? "SecretFish" : fish.displayImageName)
                 .resizable()
                 .scaledToFit()
                 .frame(width: size * 0.74, height: size * 0.74)
@@ -49,6 +62,8 @@ extension FishMaster {
             "Medaka"
         case "tai":
             "Tai"
+        case "secret":
+            "SecretFish"
         default:
             "Fish"
         }

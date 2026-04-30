@@ -12,7 +12,6 @@ struct CounterCard: View {
             Text(title)
                 .font(.headline)
                 .foregroundStyle(GameTheme.textSecondary)
-            Spacer()
             Text(value)
                 .font(.title2.bold())
                 .foregroundStyle(GameTheme.textPrimary)
