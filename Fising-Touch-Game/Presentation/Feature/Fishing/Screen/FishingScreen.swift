@@ -45,8 +45,10 @@ struct FishingScreen: View {
                     Spacer()
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, 16)
+                .padding(.top, 42)
                 .padding(.bottom, 32)
+                .frame(width: geometry.size.width, alignment: .topLeading)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
 
                 if let result = viewModel.state.result {
                     ResultOverlay(
@@ -105,21 +107,17 @@ struct FishingScreen: View {
                     .frame(width: 44, height: 44)
                     .background(.white.opacity(0.88), in: Circle())
             }
-
+            StatusCard(
+                title: String(localized: "home.coin"),
+                value: "\(store.userData.coin)",
+                imageName: "Coin"
+            )
             Spacer()
-
-            VStack(alignment: .trailing, spacing: 8) {
-                FishingStatusCard(
-                    title: String(localized: "home.coin"),
-                    value: "\(store.userData.coin)",
-                    imageName: "Coin"
-                )
-                FishingStatusCard(
-                    title: String(localized: "home.selectedBait"),
-                    value: store.selectedBait.name,
-                    imageName: baitImageName
-                )
-            }
+            StatusCard(
+                title: String(localized: "home.selectedBait"),
+                value: store.selectedBait.name,
+                imageName: baitImageName
+            )
         }
     }
 

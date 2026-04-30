@@ -82,13 +82,13 @@ struct HomeScreen: View {
     /// 上部ステータス表示。
     private var topStatusRow: some View {
         HStack(spacing: 12) {
-            HomeStatusCard(
+            StatusCard(
                 title: String(localized: "home.coin"),
                 value: "\(viewModel.state.coin)",
                 imageName: "Coin",
             )
             Spacer()
-            HomeStatusCard(
+            StatusCard(
                 title: String(localized: "home.selectedBait"),
                 value: viewModel.state.selectedBaitName,
                 imageName: selectedBaitImageName,

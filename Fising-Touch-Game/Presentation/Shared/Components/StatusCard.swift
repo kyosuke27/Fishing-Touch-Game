@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// ホーム画面専用のステータスカード。
-struct HomeStatusCard: View {
+struct StatusCard: View {
     /// ラベル名。
     let title: String
     /// 表示値。
@@ -20,7 +20,8 @@ struct HomeStatusCard: View {
                     .foregroundStyle(GameTheme.textPrimary)
                     .lineLimit(1)
         }
-        .padding(8)
+        .padding(.horizontal,8)
+        .padding(.vertical,2)
         .background(.black.opacity(0.25), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
         .shadow(color: GameTheme.mainBlue.opacity(0.12), radius: 12, x: 0, y: 8)
     }
