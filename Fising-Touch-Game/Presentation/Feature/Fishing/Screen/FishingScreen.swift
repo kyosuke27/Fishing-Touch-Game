@@ -66,6 +66,7 @@ struct FishingScreen: View {
         }
         .ignoresSafeArea()
         .onReceive(timer) { date in
+            // 前時刻からの変化値
             let delta = date.timeIntervalSince(lastUpdate ?? date)
             lastUpdate = date
             viewModel.update(deltaTime: delta)

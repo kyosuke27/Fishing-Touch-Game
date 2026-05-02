@@ -22,6 +22,7 @@ final class FishingScreenViewModel: ObservableObject {
             currentWeight: Self.drawWeight(for: fish),
             successCount: 0,
             barPosition: 0,
+            // Hitエリアの中心
             hitZoneCenter: Self.makeHitZoneCenter(width: fish.hitZoneWidth),
             result: nil,
             isRunning: true
@@ -33,6 +34,7 @@ final class FishingScreenViewModel: ObservableObject {
     func update(deltaTime: TimeInterval) {
         guard state.isRunning else { return }
 
+        // 変化値
         let delta = deltaTime * state.targetFish.barSpeed * 0.35 * direction
         var nextPosition = state.barPosition + delta
 
@@ -51,9 +53,12 @@ final class FishingScreenViewModel: ObservableObject {
     func tap() {
         guard state.isRunning else { return }
 
+        // 左端
         let lowerBound = state.hitZoneCenter - (state.targetFish.hitZoneWidth / 2)
+        // 右端
         let upperBound = state.hitZoneCenter + (state.targetFish.hitZoneWidth / 2)
 
+        // barのポジション
         guard (lowerBound...upperBound).contains(state.barPosition) else {
             state.isRunning = false
             state.result = .failure(target: state.targetFish)
@@ -62,6 +67,7 @@ final class FishingScreenViewModel: ObservableObject {
 
         state.successCount += 1
 
+        // 成功判定
         guard state.successCount >= state.targetFish.requiredHits else {
             state.hitZoneCenter = Self.makeHitZoneCenter(width: state.targetFish.hitZoneWidth)
             return

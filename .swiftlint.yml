@@ -1,0 +1,30 @@
+disabled_rules:
+  - trailing_whitespace
+  - line_length
+  - force_cast
+
+opt_in_rules:
+  - explicit_init
+  - redundant_nil_coalescing
+  - empty_count
+  - first_where
+  - contains_over_first_not_nil
+  - closure_spacing
+  - operator_usage_whitespace
+  - vertical_whitespace_between_cases
+  - vertical_parameter_alignment
+  - vertical_parameter_alignment_on_call
+  - multiline_arguments
+  - multiline_parameters
+  - multiline_function_chains
+  - opening_brace
+  - closing_brace
+
+included:
+  # - Sources
+  # - Tests
+
+excluded:
+  - Pods
+  - Carthage
+  - .build
