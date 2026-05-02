@@ -20,8 +20,8 @@ struct StatusCard: View {
                     .foregroundStyle(GameTheme.textPrimary)
                     .lineLimit(1)
         }
-        .padding(.horizontal,8)
-        .padding(.vertical,2)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 2)
         .background(.black.opacity(0.25), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
         .shadow(color: GameTheme.mainBlue.opacity(0.12), radius: 12, x: 0, y: 8)
     }

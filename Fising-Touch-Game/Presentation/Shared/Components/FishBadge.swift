@@ -45,8 +45,10 @@ struct FishBadge: View {
         switch fish.rarity {
         case 3:
             GameTheme.accentYellow
+
         case 2:
             GameTheme.subGreen
+
         default:
             GameTheme.mainBlue
         }
@@ -60,10 +62,13 @@ extension FishMaster {
         switch id {
         case "medaka":
             "Medaka"
+
         case "tai":
             "Tai"
+
         case "secret":
             "SecretFish"
+
         default:
             "Fish"
         }

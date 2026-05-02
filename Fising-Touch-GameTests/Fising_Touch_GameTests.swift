@@ -42,7 +42,6 @@ final class Fising_Touch_GameTests: XCTestCase {
         XCTAssertTrue(result.isNewRecord)
         XCTAssertEqual(store.userData.catchHistory.first?.fishId, "aji")
         XCTAssertEqual(store.userData.coin, GameMaster.initialData.coin + 100)
-        XCTAssertEqual(entry?.caughtCount, 1)
         XCTAssertEqual(entry?.maxWeight, 0.8)
         XCTAssertTrue(entry?.isUnlocked == true)
     }

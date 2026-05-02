@@ -29,10 +29,10 @@ struct FishingHitBar: View {
                     .scaledToFill()
                     // 大きさを変更
                     // バーの高さを1/3に変更
-                    .frame(width: topBarWidth, height: barHeight/3)
+                    .frame(width: topBarWidth, height: barHeight / 3)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .clipped()
-                    .offset(x: topBarX,y:-4)
+                    .offset(x: topBarX, y: -4)
 
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
                     .fill(.white)
@@ -62,7 +62,7 @@ struct FishingHitBar: View {
     ///   - zoneWidth: TopBarの表示幅。
     /// - Returns: BaseBar内に収まるX座標。
     private func topBarOffsetX(totalWidth: CGFloat, zoneWidth: CGFloat) -> CGFloat {
-        let centerX = (totalWidth-20) * state.hitZoneCenter
+        let centerX = (totalWidth - 20) * state.hitZoneCenter
         let rawOffsetX = centerX - (zoneWidth / 2)
         return min(max(rawOffsetX, 0), totalWidth - zoneWidth)
     }

@@ -27,6 +27,7 @@ struct FishingScreen: View {
         switch store.selectedBait.id {
         case "premium_bait":
             "Ebi"
+
         default:
             "Esa"
         }
@@ -150,7 +151,7 @@ struct FishingScreen: View {
                 Image("TapButton")
                     .resizable()
                     .scaledToFill()
-                    .frame(width:size.width*0.5,height: size.height*0.1)
+                    .frame(width: size.width * 0.5, height: size.height * 0.1)
                     .opacity(viewModel.state.result != nil ? 0.6 : 1)
                     .background(.gray)
             }

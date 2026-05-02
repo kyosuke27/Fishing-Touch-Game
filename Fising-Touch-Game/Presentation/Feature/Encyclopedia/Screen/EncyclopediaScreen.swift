@@ -81,7 +81,6 @@ private struct FishDetailScreen: View {
                             .foregroundStyle(GameTheme.textSecondary)
                         Divider()
                         DetailRow(title: String(localized: "encyclopedia.maxWeight"), value: entry.maxWeight?.formattedWeight ?? "-")
-                        DetailRow(title: String(localized: "encyclopedia.caughtCount"), value: "\(entry.caughtCount)\(String(localized: "common.times"))")
                         DetailRow(title: String(localized: "encyclopedia.requiredHits"), value: "\(fish.requiredHits)")
                     }
                     .glassCard()
@@ -108,7 +107,6 @@ private struct EncyclopediaCard: View {
                 .font(.headline.bold())
                 .foregroundStyle(GameTheme.textPrimary)
             RarityStars(rarity: fish.rarity)
-            Text("\(entry.caughtCount)\(String(localized: "common.times"))")
                 .font(.subheadline)
                 .foregroundStyle(GameTheme.textSecondary)
         }

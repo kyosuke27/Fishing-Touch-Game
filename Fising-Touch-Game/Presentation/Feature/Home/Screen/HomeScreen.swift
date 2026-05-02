@@ -26,6 +26,7 @@ struct HomeScreen: View {
         switch viewModel.state.selectedBaitId {
         case "premium_bait":
             "Ebi"
+
         default:
             "Esa"
         }
@@ -102,7 +103,7 @@ struct HomeScreen: View {
             Image("Logo")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 280,height: 140)
+                .frame(width: 280, height: 140)
                 .shadow(color: .white.opacity(0.45), radius: 14, x: 0, y: 8)
             
             Text(String(localized: "home.subtitle"))
@@ -131,7 +132,7 @@ struct HomeScreen: View {
                     .frame(height: 80)
                     .clipped()
             }
-            .frame(width:240,height: 90)
+            .frame(width: 240, height: 90)
             .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
             .shadow(color: GameTheme.mainBlue.opacity(0.24), radius: 18, x: 0, y: 12)
         }
