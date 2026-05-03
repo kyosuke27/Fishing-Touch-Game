@@ -4,6 +4,8 @@ import SwiftUI
 struct FishingHitBar: View {
     /// 現在状態。
     let state: FishingState
+    /// BaseBarの丸み分を除いた左右余白。
+    private let horizontalInset: CGFloat = 10
     /// 移動バーの横幅。
     private let markerWidth: CGFloat = 12
     /// バー全体の高さ。
@@ -14,9 +16,11 @@ struct FishingHitBar: View {
     var body: some View {
         GeometryReader { proxy in
             let barWidth = proxy.size.width
-            let topBarWidth = topBarWidth(for: barWidth)
-            let topBarX = topBarOffsetX(totalWidth: barWidth, zoneWidth: topBarWidth)
-            let markerX = markerOffsetX(totalWidth: barWidth)
+            // 実際に利用できる範囲
+            let playableWidth = max(barWidth - (horizontalInset * 2), 0)
+            let topBarWidth = topBarWidth(for: playableWidth)
+            let topBarX = topBarOffsetX(playableWidth: playableWidth, zoneWidth: topBarWidth)
+            let markerX = markerOffsetX(playableWidth: playableWidth)
 
             ZStack(alignment: .leading) {
                 Image("BaseBar")
@@ -32,7 +36,7 @@ struct FishingHitBar: View {
                     .frame(width: topBarWidth, height: barHeight / 3)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .clipped()
-                    .offset(x: topBarX, y: -4)
+                    .offset(x: topBarX + horizontalInset, y: -4)
 
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
                     .fill(.white)
@@ -41,7 +45,7 @@ struct FishingHitBar: View {
                         RoundedRectangle(cornerRadius: 6, style: .continuous)
                             .stroke(GameTheme.mainBlue, lineWidth: 2)
                     )
-                    .offset(x: markerX)
+                    .offset(x: markerX + horizontalInset)
             }
             .frame(width: barWidth, height: barHeight, alignment: .leading)
         }
@@ -50,29 +54,29 @@ struct FishingHitBar: View {
     }
 
     /// TopBarの表示幅を返す。
-    /// - Parameter totalWidth: バー全体の横幅。
+    /// - Parameter playableWidth: 有効なバー横幅。
     /// - Returns: TopBarの表示幅。
-    private func topBarWidth(for totalWidth: CGFloat) -> CGFloat {
-        totalWidth * state.targetFish.hitZoneWidth
+    private func topBarWidth(for playableWidth: CGFloat) -> CGFloat {
+        playableWidth * state.targetFish.hitZoneWidth
     }
 
     /// TopBarの表示開始位置を返す。
     /// - Parameters:
-    ///   - totalWidth: バー全体の横幅。
+    ///   - playableWidth: 有効なバー横幅。
     ///   - zoneWidth: TopBarの表示幅。
     /// - Returns: BaseBar内に収まるX座標。
-    private func topBarOffsetX(totalWidth: CGFloat, zoneWidth: CGFloat) -> CGFloat {
-        let centerX = (totalWidth - 20) * state.hitZoneCenter
+    private func topBarOffsetX(playableWidth: CGFloat, zoneWidth: CGFloat) -> CGFloat {
+        let centerX = playableWidth * state.hitZoneCenter
         let rawOffsetX = centerX - (zoneWidth / 2)
-        return min(max(rawOffsetX, 0), totalWidth - zoneWidth)
+        return min(max(rawOffsetX, 0), playableWidth - zoneWidth)
     }
 
     /// 移動バーの表示位置を返す。
-    /// - Parameter totalWidth: バー全体の横幅。
+    /// - Parameter playableWidth: 有効なバー横幅。
     /// - Returns: 移動バーのX座標。
-    private func markerOffsetX(totalWidth: CGFloat) -> CGFloat {
-        let rawOffsetX = totalWidth * state.barPosition
-        return min(max(rawOffsetX, 0), totalWidth - markerWidth)
+    private func markerOffsetX(playableWidth: CGFloat) -> CGFloat {
+        let rawOffsetX = playableWidth * state.barPosition
+        return min(max(rawOffsetX, 0), playableWidth - markerWidth)
     }
 }
 
