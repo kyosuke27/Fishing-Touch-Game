@@ -57,6 +57,8 @@ struct FishingHitBar: View {
     /// - Parameter playableWidth: 有効なバー横幅。
     /// - Returns: TopBarの表示幅。
     private func topBarWidth(for playableWidth: CGFloat) -> CGFloat {
+        // hitZoneWidth:0~1の表示割合部分
+        // プレイヤーが使用できる領域（baseBarの端の部分を除いた部分）にバー全体の割合をかける
         playableWidth * state.targetFish.hitZoneWidth
     }
 
