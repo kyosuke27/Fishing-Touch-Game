@@ -65,6 +65,9 @@ extension FishMaster {
 
         case "tai":
             "Tai"
+            
+        case "aji":
+            "Azi"
 
         case "secret":
             "SecretFish"
