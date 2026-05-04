@@ -12,40 +12,73 @@ struct ShopScreen: View {
     }
 
     var body: some View {
-        ZStack {
-            OceanBackground()
+        GeometryReader { geometry in
+            ZStack {
+                shopBackground(
+                    size: geometry.size,
+                    safeAreaInsets: geometry.safeAreaInsets
+                )
 
-            ScrollView {
-                VStack(spacing: 16) {
-                    HStack {
-                        Text(String(localized: "shop.coin"))
-                            .font(.headline)
-                            .foregroundStyle(GameTheme.textSecondary)
-                        Spacer()
-                        StatusPill(title: "\(store.userData.coin)", systemImage: "centsign.circle.fill")
-                    }
-                    .glassCard()
+                ScrollView {
+                    VStack(spacing: 16) {
+                        HStack {
+                            Text(String(localized: "shop.coin"))
+                                .font(.headline)
+                                .foregroundStyle(GameTheme.textSecondary)
+                            Spacer()
+                            StatusPill(title: "\(store.userData.coin)", systemImage: "centsign.circle.fill")
+                        }
+                        .glassCard()
 
-                    ForEach(GameMaster.baits) { bait in
-                        ShopBaitCard(
-                            bait: bait,
-                            isOwned: store.isOwned(baitId: bait.id),
-                            isSelected: store.selectedBait.id == bait.id,
-                            canAfford: store.userData.coin >= bait.price,
-                            onPurchase: {
-                                _ = store.purchaseBait(bait)
-                            },
-                            onSelect: {
-                                store.selectBait(bait)
-                            }
-                        )
+                        ForEach(GameMaster.baits) { bait in
+                            ShopBaitCard(
+                                bait: bait,
+                                isOwned: store.isOwned(baitId: bait.id),
+                                isSelected: store.selectedBait.id == bait.id,
+                                canAfford: store.userData.coin >= bait.price,
+                                onPurchase: {
+                                    _ = store.purchaseBait(bait)
+                                },
+                                onSelect: {
+                                    store.selectBait(bait)
+                                }
+                            )
+                        }
                     }
+                    .padding(20)
                 }
-                .padding(20)
             }
         }
         .navigationTitle(String(localized: "shop.title"))
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    /// ショップ背景を返す。
+    /// - Parameter size: 画面サイズ。
+    /// - Parameter safeAreaInsets: セーフエリア余白。
+    /// - Returns: 背景View。
+    private func shopBackground(size: CGSize, safeAreaInsets: EdgeInsets) -> some View {
+        Image("ListBackground")
+            .resizable()
+            .scaledToFill()
+            .frame(
+                width: size.width,
+                height: size.height + safeAreaInsets.top + safeAreaInsets.bottom,
+                alignment: .center
+            )
+            .clipped()
+            .ignoresSafeArea()
+            .overlay(
+                LinearGradient(
+                    colors: [
+                        Color.white.opacity(0.10),
+                        Color.white.opacity(0.18),
+                        GameTheme.background.opacity(0.48)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
     }
 }
 
