@@ -12,28 +12,61 @@ struct CatchHistoryScreen: View {
     }
 
     var body: some View {
-        ZStack {
-            OceanBackground()
-
-            if store.userData.catchHistory.isEmpty {
-                ContentUnavailableView(
-                    String(localized: "history.empty.title"),
-                    systemImage: "fish",
-                    description: Text(String(localized: "history.empty.description"))
+        GeometryReader { geometry in
+            ZStack {
+                catchHistoryBackground(
+                    size: geometry.size,
+                    safeAreaInsets: geometry.safeAreaInsets
                 )
-            } else {
-                ScrollView {
-                    VStack(spacing: 14) {
-                        ForEach(store.userData.catchHistory) { record in
-                            CatchHistoryCard(catchRecord: record, fish: store.fishMaster(for: record.fishId))
+
+                if store.userData.catchHistory.isEmpty {
+                    ContentUnavailableView(
+                        String(localized: "history.empty.title"),
+                        systemImage: "fish",
+                        description: Text(String(localized: "history.empty.description"))
+                    )
+                } else {
+                    ScrollView {
+                        VStack(spacing: 14) {
+                            ForEach(store.userData.catchHistory) { record in
+                                CatchHistoryCard(catchRecord: record, fish: store.fishMaster(for: record.fishId))
+                            }
                         }
+                        .padding(20)
                     }
-                    .padding(20)
                 }
             }
         }
         .navigationTitle(String(localized: "history.title"))
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    /// 釣果一覧背景を返す。
+    /// - Parameter size: 画面サイズ。
+    /// - Parameter safeAreaInsets: セーフエリア余白。
+    /// - Returns: 背景View。
+    private func catchHistoryBackground(size: CGSize, safeAreaInsets: EdgeInsets) -> some View {
+        Image("ListBackground")
+            .resizable()
+            .scaledToFill()
+            .frame(
+                width: size.width,
+                height: size.height + safeAreaInsets.top + safeAreaInsets.bottom,
+                alignment: .center
+            )
+            .clipped()
+            .ignoresSafeArea()
+            .overlay(
+                LinearGradient(
+                    colors: [
+                        Color.white.opacity(0.10),
+                        Color.white.opacity(0.18),
+                        GameTheme.background.opacity(0.48)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
     }
 }
 
