@@ -82,17 +82,36 @@ private struct CatchHistoryCard: View {
             FishBadge(fish: fish ?? GameMaster.fishes[0], size: 64)
             VStack(alignment: .leading, spacing: 6) {
                 Text(catchRecord.fishName)
-                    .font(.headline.bold())
+                    .font(.title3.bold())
                     .foregroundStyle(GameTheme.textPrimary)
-                Text("\(catchRecord.weight.formattedWeight) / \(String(localized: "history.reward")) \(catchRecord.rewardCoin)")
-                    .foregroundStyle(GameTheme.textSecondary)
+
+                HStack(spacing: 8) {
+                    Text(catchRecord.weight.formattedWeight)
+                        .foregroundStyle(GameTheme.textSecondary)
+
+                    Spacer(minLength: 0)
+
+                    Image("Coin")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
+
+                    Text("\(catchRecord.rewardCoin)")
+                        .foregroundStyle(GameTheme.textSecondary)
+                }
+
+                RarityStars(rarity: catchRecord.rarity)
+
                 Text(catchRecord.caughtAt.formatted(date: .abbreviated, time: .shortened))
                     .font(.footnote)
                     .foregroundStyle(GameTheme.textSecondary)
             }
-            Spacer()
-            RarityStars(rarity: catchRecord.rarity)
         }
         .glassCard()
+        .overlay(
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .stroke(Color.white.opacity(0.85), lineWidth: 1.5)
+        )
+        .shadow(color: .black.opacity(0.22), radius: 14, x: 0, y: 8)
     }
 }
