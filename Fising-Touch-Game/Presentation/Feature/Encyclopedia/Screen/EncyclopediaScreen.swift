@@ -4,9 +4,13 @@ import SwiftUI
 struct EncyclopediaScreen: View {
     /// 共通ストア。
     @ObservedObject private var store: GameSessionStore
+    /// ロックカード表示確認用の一時ダミー件数。
+    private let temporaryLockedCardCount = 2
 
-    /// グリッド定義。
-    private let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    /// 画面左右の余白。
+    private let horizontalPadding: CGFloat = 18
+    /// カード間の横余白。
+    private let gridSpacing: CGFloat = 14
 
     /// Screenを生成する。
     /// - Parameter store: 共通ストア。
@@ -15,39 +19,86 @@ struct EncyclopediaScreen: View {
     }
 
     var body: some View {
-        ZStack {
-            OceanBackground()
+        GeometryReader { geometry in
+            let columns = [
+                GridItem(.flexible(), spacing: gridSpacing),
+                GridItem(.flexible(), spacing: gridSpacing)
+            ]
 
-            ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(String(localized: "encyclopedia.title"))
-                            .font(.system(size: 34, weight: .black, design: .rounded))
-                            .foregroundStyle(GameTheme.textPrimary)
-                        Text("\(String(localized: "encyclopedia.progress")) \(store.unlockedFishCount) / \(GameMaster.fishes.count)")
-                            .font(.headline)
-                            .foregroundStyle(GameTheme.textSecondary)
-                    }
-                    .glassCard()
+            ZStack {
+                encyclopediaBackground(
+                    size: geometry.size,
+                    safeAreaInsets: geometry.safeAreaInsets
+                )
 
-                    LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(GameMaster.fishes) { fish in
-                            if let entry = store.encyclopediaEntry(for: fish.id), entry.isUnlocked {
-                                NavigationLink {
-                                    FishDetailScreen(fish: fish, entry: entry)
-                                } label: {
-                                    EncyclopediaCard(fish: fish, entry: entry)
+                ScrollView {
+                    VStack(spacing: 20) {
+                        VStack(spacing: 8) {
+                            Text(String(localized: "encyclopedia.title"))
+                                .font(.system(size: 34, weight: .black, design: .rounded))
+                                .foregroundStyle(GameTheme.textPrimary)
+                                .multilineTextAlignment(.center)
+                            Text("\(String(localized: "encyclopedia.progress")) \(store.unlockedFishCount) / \(GameMaster.fishes.count)")
+                                .font(.headline)
+                                .foregroundStyle(GameTheme.textSecondary)
+                                .multilineTextAlignment(.center)
+                        }
+                        .padding(.horizontal, horizontalPadding)
+
+                        LazyVGrid(columns: columns, spacing: 14) {
+                            ForEach(GameMaster.fishes) { fish in
+                                if let entry = store.encyclopediaEntry(for: fish.id), entry.isUnlocked {
+                                    NavigationLink {
+                                        FishDetailScreen(fish: fish, entry: entry)
+                                    } label: {
+                                        EncyclopediaCard(fish: fish, entry: entry)
+                                    }
+                                    .buttonStyle(.plain)
+                                } else {
+                                    HiddenLockedFishCard()
                                 }
-                                .buttonStyle(.plain)
-                            } else {
-                                LockedFishCard()
+                            }
+
+                            ForEach(0..<temporaryLockedCardCount, id: \.self) { _ in
+                                HiddenLockedFishCard()
                             }
                         }
+                        .padding(.horizontal, horizontalPadding)
                     }
+                    .padding(.top, 8)
+                    .padding(.bottom, 20)
                 }
-                .padding(20)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         }
+    }
+
+    /// 図鑑一覧背景を返す。
+    /// - Parameter size: 画面サイズ。
+    /// - Parameter safeAreaInsets: セーフエリア余白。
+    /// - Returns: 背景View。
+    private func encyclopediaBackground(size: CGSize, safeAreaInsets: EdgeInsets) -> some View {
+        Image("ListBackground")
+            .resizable()
+            .scaledToFill()
+            .frame(
+                width: size.width,
+                height: size.height + safeAreaInsets.top + safeAreaInsets.bottom,
+                alignment: .center
+            )
+            .clipped()
+            .ignoresSafeArea()
+            .overlay(
+                LinearGradient(
+                    colors: [
+                        Color.white.opacity(0.10),
+                        Color.white.opacity(0.18),
+                        GameTheme.background.opacity(0.48)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
     }
 }
 
@@ -101,7 +152,7 @@ private struct EncyclopediaCard: View {
     let entry: EncyclopediaEntry
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 4) {
             FishBadge(fish: fish, size: 88)
             Text(fish.name)
                 .font(.headline.bold())
@@ -110,31 +161,68 @@ private struct EncyclopediaCard: View {
                 .font(.subheadline)
                 .foregroundStyle(GameTheme.textSecondary)
         }
-        .frame(maxWidth: .infinity)
-        .glassCard()
+        .frame(maxWidth: .infinity, minHeight: 176)
+        .background(.white.opacity(0.88), in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .stroke(Color.white.opacity(0.84), lineWidth: 1.5)
+        )
+        .shadow(color: GameTheme.mainBlue.opacity(0.12), radius: 16, x: 0, y: 10)
     }
 }
 
 /// 未解放魚カード。
 private struct LockedFishCard: View {
     var body: some View {
-        VStack(spacing: 12) {
-            Circle()
-                .fill(Color.white.opacity(0.75))
-                .frame(width: 88, height: 88)
-                .overlay(
-                    Image(systemName: "questionmark")
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundStyle(GameTheme.textSecondary)
-                )
+        VStack(spacing: 4) {
+            FishBadge(fish: GameMaster.fishes[0], size: 88, isHidden: true)
             Text(String(localized: "encyclopedia.lockedTitle"))
                 .font(.headline.bold())
                 .foregroundStyle(GameTheme.textSecondary)
             Text(String(localized: "encyclopedia.lockedSubtitle"))
                 .font(.subheadline)
                 .foregroundStyle(GameTheme.textSecondary)
+                .multilineTextAlignment(.center)
         }
-        .frame(maxWidth: .infinity)
-        .glassCard()
+        .frame(maxWidth: .infinity, minHeight: 176)
+        .background(.white.opacity(0.82), in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .stroke(Color.white.opacity(0.78), lineWidth: 1.5)
+        )
+        .shadow(color: GameTheme.mainBlue.opacity(0.10), radius: 16, x: 0, y: 10)
+    }
+}
+
+/// マスタ未登録魚用のロックカード。
+private struct HiddenLockedFishCard: View {
+    var body: some View {
+        VStack(spacing: 12) {
+            ZStack {
+                FishBadge(fish: GameMaster.fishes[0], size: 88, isHidden: true)
+
+                Image("Blok")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 42, height: 42)
+                    .offset(x: 22, y: 22)
+            }
+
+            Text(String(localized: "encyclopedia.lockedTitle"))
+                .font(.headline.bold())
+                .foregroundStyle(GameTheme.textSecondary)
+
+            Text(String(localized: "encyclopedia.lockedSubtitle"))
+                .font(.subheadline)
+                .foregroundStyle(GameTheme.textSecondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity, minHeight: 176)
+        .background(.white.opacity(0.82), in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .stroke(Color.white.opacity(0.78), lineWidth: 1.5)
+        )
+        .shadow(color: GameTheme.mainBlue.opacity(0.10), radius: 16, x: 0, y: 10)
     }
 }
