@@ -10,8 +10,10 @@ struct BaitMaster: Codable, Identifiable, Hashable {
     let description: String
     /// 購入価格。
     let price: Int
+    /// レア度。
+    let rarity: Int
     /// 魚ごとの抽選重み。
     let rarityWeights: [String: Int]
-    /// 表示用のSF Symbols名。
-    let assetName: String
+    /// 表示用の画像名。
+    let imageName: String
 }
