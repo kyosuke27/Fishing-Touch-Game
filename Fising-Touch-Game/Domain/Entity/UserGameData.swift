@@ -6,8 +6,8 @@ struct UserGameData: Codable, Equatable {
     var coin: Int
     /// 現在選択中の餌ID。
     var selectedBaitId: String
-    /// 所持済み餌ID一覧。
-    var ownedBaitIds: [String]
+    /// 餌ごとの所持数。
+    var baitQuantities: [String: Int]
     /// 釣果履歴一覧。
     var catchHistory: [CaughtFish]
     /// 図鑑状態一覧。

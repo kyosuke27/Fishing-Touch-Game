@@ -50,18 +50,56 @@ enum GameMaster {
         BaitMaster(
             id: "normal_bait",
             name: "アオイソメ",
-            description: "普通のイソメ。特別な効果はない。",
+            description: "無料で入手できる基本の餌。小型の魚を狙いやすい。",
             price: 0,
-            rarityWeights: ["medaka": 50, "aji": 35, "tai": 15],
-            assetName: "leaf.fill"
+            rarity: 1,
+            rarityWeights: ["medaka": 55, "aji": 35, "tai": 10],
+            imageName: "Aoisome"
         ),
         BaitMaster(
             id: "premium_bait",
-            name: "エビ",
-            description: "レアな魚と出会いやすくなる。",
-            price: 1500,
-            rarityWeights: ["medaka": 25, "aji": 40, "tai": 35],
-            assetName: "drop.fill"
+            name: "えび",
+            description: "扱いやすく、レアな魚も狙いやすい定番の高級餌。",
+            price: 300,
+            rarity: 4,
+            rarityWeights: ["medaka": 20, "aji": 35, "tai": 45],
+            imageName: "Ebi"
+        ),
+        BaitMaster(
+            id: "okiami_bait",
+            name: "オキアミ",
+            description: "小型から中型まで幅広く寄せられる万能餌。",
+            price: 100,
+            rarity: 2,
+            rarityWeights: ["medaka": 45, "aji": 40, "tai": 15],
+            imageName: "Okiami"
+        ),
+        BaitMaster(
+            id: "kibinago_bait",
+            name: "キビナゴ",
+            description: "中型以上を狙いやすくなるバランス型の餌。",
+            price: 200,
+            rarity: 3,
+            rarityWeights: ["medaka": 35, "aji": 40, "tai": 25],
+            imageName: "Kibinago"
+        ),
+        BaitMaster(
+            id: "aji_bait",
+            name: "アジ",
+            description: "大型魚を強く意識した高級な活き餌。",
+            price: 500,
+            rarity: 5,
+            rarityWeights: ["medaka": 10, "aji": 25, "tai": 65],
+            imageName: "IkiAzi"
+        ),
+        BaitMaster(
+            id: "ika_kirimi_bait",
+            name: "イカの切り身",
+            description: "匂いで魚を寄せやすく、大物狙いにも向く餌。",
+            price: 350,
+            rarity: 4,
+            rarityWeights: ["medaka": 18, "aji": 37, "tai": 45],
+            imageName: "IkaKirimi"
         )
     ]
 
@@ -69,7 +107,7 @@ enum GameMaster {
     static let initialData = UserGameData(
         coin: 500,
         selectedBaitId: "normal_bait",
-        ownedBaitIds: ["normal_bait"],
+        baitQuantities: ["normal_bait": 1],
         catchHistory: [],
         encyclopedia: fishes.map {
             EncyclopediaEntry(
