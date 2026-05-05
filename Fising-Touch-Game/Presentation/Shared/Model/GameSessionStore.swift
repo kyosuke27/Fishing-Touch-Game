@@ -62,7 +62,14 @@ final class GameSessionStore: ObservableObject {
     /// - Parameter baitId: 餌ID。
     /// - Returns: 所持していれば`true`。
     func isOwned(baitId: String) -> Bool {
-        userData.ownedBaitIds.contains(baitId)
+        baitCount(baitId: baitId) > 0
+    }
+
+    /// 指定の餌の所持数を返す。
+    /// - Parameter baitId: 餌ID。
+    /// - Returns: 所持数。
+    func baitCount(baitId: String) -> Int {
+        userData.baitQuantities[baitId, default: 0]
     }
 
     /// 餌購入を反映する。
