@@ -22,17 +22,6 @@ struct FishingScreen: View {
         self._viewModel = StateObject(wrappedValue: FishingScreenViewModel(store: store))
     }
 
-    /// 選択中餌の表示画像名。
-    private var baitImageName: String {
-        switch store.selectedBait.id {
-        case "premium_bait":
-            "Ebi"
-
-        default:
-            "Esa"
-        }
-    }
-
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -118,7 +107,7 @@ struct FishingScreen: View {
             StatusCard(
                 title: String(localized: "home.selectedBait"),
                 value: store.selectedBait.name,
-                imageName: baitImageName
+                imageName: store.selectedBait.imageName
             )
         }
     }

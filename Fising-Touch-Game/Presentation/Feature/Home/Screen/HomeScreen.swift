@@ -21,17 +21,6 @@ struct HomeScreen: View {
         self._viewModel = StateObject(wrappedValue: HomeScreenViewModel(store: store))
     }
     
-    /// 選択中餌に応じたホーム表示画像名。
-    private var selectedBaitImageName: String {
-        switch viewModel.state.selectedBaitId {
-        case "premium_bait":
-            "Ebi"
-
-        default:
-            "Esa"
-        }
-    }
-
     /// 背景の上に重ねるコンテンツ領域の横幅。
     private var contentWidth: CGFloat {
         max(deviceWidth - 20, 0)
@@ -92,7 +81,7 @@ struct HomeScreen: View {
             StatusCard(
                 title: String(localized: "home.selectedBait"),
                 value: viewModel.state.selectedBaitName,
-                imageName: selectedBaitImageName,
+                imageName: store.selectedBait.imageName,
             )
         }
     }
