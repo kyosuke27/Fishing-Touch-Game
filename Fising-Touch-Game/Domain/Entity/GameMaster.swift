@@ -158,7 +158,7 @@ enum GameMaster {
             price: 0,
             rarity: 1,
             rarityWeights: [
-                "medaka": 28, "funa": 24, "dojo": 12, "kisu": 10, "aji": 10,
+                "medaka": 34, "funa": 22, "dojo": 11, "kisu": 9, "aji": 9,
                 "isaki": 6, "suzuki": 4, "tai": 3, "kanpachi": 2, "maguro": 1, "same": 0
             ],
             imageName: "Aoisome"
@@ -170,7 +170,7 @@ enum GameMaster {
             price: 300,
             rarity: 4,
             rarityWeights: [
-                "medaka": 8, "funa": 7, "dojo": 10, "kisu": 11, "aji": 14,
+                "medaka": 12, "funa": 6, "dojo": 9, "kisu": 10, "aji": 13,
                 "isaki": 14, "suzuki": 12, "tai": 11, "kanpachi": 7, "maguro": 4, "same": 2
             ],
             imageName: "Ebi"
@@ -182,7 +182,7 @@ enum GameMaster {
             price: 100,
             rarity: 2,
             rarityWeights: [
-                "medaka": 20, "funa": 18, "dojo": 12, "kisu": 12, "aji": 12,
+                "medaka": 25, "funa": 16, "dojo": 11, "kisu": 11, "aji": 11,
                 "isaki": 8, "suzuki": 6, "tai": 5, "kanpachi": 4, "maguro": 2, "same": 1
             ],
             imageName: "Okiami"
@@ -194,7 +194,7 @@ enum GameMaster {
             price: 200,
             rarity: 3,
             rarityWeights: [
-                "medaka": 12, "funa": 10, "dojo": 10, "kisu": 12, "aji": 13,
+                "medaka": 16, "funa": 9, "dojo": 9, "kisu": 11, "aji": 12,
                 "isaki": 12, "suzuki": 10, "tai": 8, "kanpachi": 7, "maguro": 4, "same": 2
             ],
             imageName: "Kibinago"
@@ -206,7 +206,7 @@ enum GameMaster {
             price: 500,
             rarity: 5,
             rarityWeights: [
-                "medaka": 2, "funa": 2, "dojo": 4, "kisu": 6, "aji": 8,
+                "medaka": 4, "funa": 2, "dojo": 4, "kisu": 6, "aji": 8,
                 "isaki": 12, "suzuki": 14, "tai": 16, "kanpachi": 14, "maguro": 12, "same": 10
             ],
             imageName: "IkiAzi"
@@ -218,7 +218,7 @@ enum GameMaster {
             price: 350,
             rarity: 4,
             rarityWeights: [
-                "medaka": 4, "funa": 4, "dojo": 6, "kisu": 8, "aji": 10,
+                "medaka": 7, "funa": 4, "dojo": 6, "kisu": 8, "aji": 10,
                 "isaki": 12, "suzuki": 14, "tai": 14, "kanpachi": 12, "maguro": 10, "same": 6
             ],
             imageName: "IkaKirimi"

@@ -72,17 +72,35 @@ extension FishMaster {
         case "medaka":
             "Medaka"
 
+        case "funa":
+            "Funa"
+
+        case "dojo":
+            "Dojo"
+
+        case "kisu":
+            "Kisu"
+
+        case "aji":
+            "Azi"
+
         case "isaki":
             "Isaki"
+
+        case "suzuki":
+            "Suzuki"
 
         case "kanpachi":
             "Kanpati"
 
         case "tai":
             "Tai"
-            
-        case "aji":
-            "Azi"
+
+        case "maguro":
+            "Maguro"
+
+        case "same":
+            "Same"
 
         case "secret":
             "SecretFish"
