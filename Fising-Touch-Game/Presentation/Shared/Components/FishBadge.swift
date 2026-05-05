@@ -43,10 +43,19 @@ struct FishBadge: View {
     /// レアリティに応じた色を返す。
     private var rarityColor: Color {
         switch fish.rarity {
-        case 3:
+        case 5:
+            GameTheme.warning
+
+        case 4:
             GameTheme.accentYellow
 
+        case 3:
+            GameTheme.subGreen
+
         case 2:
+            GameTheme.mainBlue.opacity(0.85)
+
+        case 1:
             GameTheme.subGreen
 
         default:
@@ -62,6 +71,12 @@ extension FishMaster {
         switch id {
         case "medaka":
             "Medaka"
+
+        case "isaki":
+            "Isaki"
+
+        case "kanpachi":
+            "Kanpati"
 
         case "tai":
             "Tai"

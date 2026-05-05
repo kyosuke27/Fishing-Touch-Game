@@ -64,6 +64,9 @@ struct EncyclopediaScreen: View {
                             }
                         }
                         .padding(.horizontal, horizontalPadding)
+
+                        Color.clear
+                            .frame(height: 96 + geometry.safeAreaInsets.bottom)
                     }
                     .padding(.top, 8)
                     .padding(.bottom, 20)
