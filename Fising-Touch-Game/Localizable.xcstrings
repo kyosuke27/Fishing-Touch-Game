@@ -857,6 +857,23 @@
         }
       }
     },
+    "shop.stock" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Owned"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所持数"
+          }
+        }
+      }
+    },
     "shop.purchase" : {
       "extractionState" : "manual",
       "localizations" : {

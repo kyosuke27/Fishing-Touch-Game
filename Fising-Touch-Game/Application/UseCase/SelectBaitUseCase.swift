@@ -18,7 +18,7 @@ struct SelectBaitUseCaseImpl: SelectBaitUseCase {
     ///   - bait: 選択対象の餌。
     /// - Returns: 更新後ユーザーデータ。選択不可の場合は`nil`。
     func execute(userData: UserGameData, bait: BaitMaster) -> UserGameData? {
-        guard userData.ownedBaitIds.contains(bait.id) else {
+        guard userData.baitQuantities[bait.id, default: 0] > 0 else {
             return nil
         }
 

@@ -18,13 +18,13 @@ struct PurchaseBaitUseCaseImpl: PurchaseBaitUseCase {
     ///   - bait: 購入対象の餌。
     /// - Returns: 更新後ユーザーデータ。購入不可の場合は`nil`。
     func execute(userData: UserGameData, bait: BaitMaster) -> UserGameData? {
-        guard !userData.ownedBaitIds.contains(bait.id), userData.coin >= bait.price else {
+        guard userData.coin >= bait.price else {
             return nil
         }
 
         var updatedData = userData
         updatedData.coin -= bait.price
-        updatedData.ownedBaitIds.append(bait.id)
+        updatedData.baitQuantities[bait.id, default: 0] += 1
         return updatedData
     }
 }

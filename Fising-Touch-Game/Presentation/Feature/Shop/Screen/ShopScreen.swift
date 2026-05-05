@@ -4,11 +4,22 @@ import SwiftUI
 struct ShopScreen: View {
     /// 共通ストア。
     @ObservedObject private var store: GameSessionStore
-
+    
     /// Screenを生成する。
     /// - Parameter store: 共通ストア。
     init(store: GameSessionStore) {
         self.store = store
+    }
+
+    /// レア度の低い順に並べた餌一覧。
+    private var sortedBaits: [BaitMaster] {
+        GameMaster.baits.sorted { lhs, rhs in
+            if lhs.rarity == rhs.rarity {
+                return lhs.price < rhs.price
+            }
+
+            return lhs.rarity < rhs.rarity
+        }
     }
 
     var body: some View {
@@ -21,19 +32,10 @@ struct ShopScreen: View {
 
                 ScrollView {
                     VStack(spacing: 16) {
-                        HStack {
-                            Text(String(localized: "shop.coin"))
-                                .font(.headline)
-                                .foregroundStyle(GameTheme.textSecondary)
-                            Spacer()
-                            StatusPill(title: "\(store.userData.coin)", systemImage: "centsign.circle.fill")
-                        }
-                        .glassCard()
-
-                        ForEach(GameMaster.baits) { bait in
+                        ForEach(sortedBaits) { bait in
                             ShopBaitCard(
                                 bait: bait,
-                                isOwned: store.isOwned(baitId: bait.id),
+                                quantity: store.baitCount(baitId: bait.id),
                                 isSelected: store.selectedBait.id == bait.id,
                                 canAfford: store.userData.coin >= bait.price,
                                 onPurchase: {
@@ -44,15 +46,34 @@ struct ShopScreen: View {
                                 }
                             )
                         }
+
+                        Color.clear
+                            .frame(height: 96 + geometry.safeAreaInsets.bottom)
                     }
-                    .padding(20)
+                    .padding(.top, 20)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 20)
                 }
             }
         }
         .navigationTitle(String(localized: "shop.title"))
         .navigationBarTitleDisplayMode(.inline)
-    }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                HStack(spacing: 6) {
+                    Image("Coin")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 18, height: 18)
 
+                    Text("\(store.userData.coin)")
+                        .font(.headline.bold())
+                        .foregroundStyle(GameTheme.textPrimary)
+                }
+            }
+        }
+    }
+    
     /// ショップ背景を返す。
     /// - Parameter size: 画面サイズ。
     /// - Parameter safeAreaInsets: セーフエリア余白。
@@ -86,8 +107,8 @@ struct ShopScreen: View {
 private struct ShopBaitCard: View {
     /// 表示対象の餌。
     let bait: BaitMaster
-    /// 所持済みかどうか。
-    let isOwned: Bool
+    /// 所持数。
+    let quantity: Int
     /// 選択中かどうか。
     let isSelected: Bool
     /// 購入可能かどうか。
@@ -96,58 +117,122 @@ private struct ShopBaitCard: View {
     let onPurchase: () -> Void
     /// 選択アクション。
     let onSelect: () -> Void
-
+    
+    /// 選択可能かどうか。
+    private var canSelect: Bool {
+        quantity > 0
+    }
+    
     var body: some View {
-        HStack(spacing: 14) {
-            Circle()
-                .fill(Color.white)
-                .frame(width: 72, height: 72)
-                .overlay(
-                    Image(systemName: bait.assetName)
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundStyle(GameTheme.mainBlue)
-                )
-
-            VStack(alignment: .leading, spacing: 6) {
-                HStack {
-                    Text(bait.name)
-                        .font(.title3.bold())
-                        .foregroundStyle(GameTheme.textPrimary)
-                    if bait.id == "premium_bait" {
-                        Text(String(localized: "shop.recommended"))
-                            .font(.caption.bold())
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(GameTheme.accentYellow, in: Capsule())
+        VStack{
+            HStack(spacing: 14) {
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: 72, height: 72)
+                    .overlay(
+                        Image(bait.imageName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 52, height: 52)
+                    )
+                
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        Text(bait.name)
+                            .font(.title3.bold())
+                            .foregroundStyle(GameTheme.textPrimary)
+                        Spacer(minLength: 0)
+                        
+                        if isSelected {
+                            Image("BaitMark")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 74, height: 48)
+                        }
                     }
+                    
+                    HStack(alignment: .center, spacing: 8) {
+                        RarityStars(rarity: bait.rarity)
+                            .font(.subheadline)
+                            .foregroundStyle(GameTheme.textSecondary)
+                        
+                        Spacer(minLength: 0)
+                        
+                        Image("Coin")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 28, height: 28)
+                        Text("\(bait.price)")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(GameTheme.textPrimary)
+                    }
+                    
+                    Text(bait.description)
+                        .font(.subheadline)
+                        .foregroundStyle(GameTheme.textSecondary)
+                    
+                    
                 }
-
-                Text(bait.description)
-                    .font(.subheadline)
-                    .foregroundStyle(GameTheme.textSecondary)
-                Text("\(String(localized: "shop.price")): \(bait.price)")
-                    .font(.subheadline.bold())
-                    .foregroundStyle(GameTheme.textPrimary)
             }
-
-            Spacer()
-
-            if isSelected {
-                BadgeButton(title: String(localized: "shop.selected"), color: GameTheme.mainBlue)
-            } else if isOwned {
-                Button(String(localized: "shop.select")) {
-                    onSelect()
+            HStack(alignment: .center, spacing: 10) {
+                Text("\(String(localized: "shop.stock")): \(quantity)")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(GameTheme.textSecondary)
+                
+                Spacer(minLength: 0)
+                
+                if canSelect {
+                    imageButton(
+                        imageName: "SelectButton",
+                        isEnabled: !isSelected,
+                        action: onSelect
+                    )
                 }
-                .buttonStyle(ActionCapsuleButtonStyle(color: GameTheme.subGreen))
-            } else {
-                Button(String(localized: "shop.purchase")) {
-                    onPurchase()
-                }
-                .buttonStyle(ActionCapsuleButtonStyle(color: canAfford ? GameTheme.subGreen : GameTheme.textSecondary))
-                .disabled(!canAfford)
+                
+                imageButton(
+                    imageName: "PurchaseButton",
+                    isEnabled: canAfford,
+                    action: onPurchase
+                )
             }
         }
         .glassCard()
+    }
+    
+    /// 画像ボタンを返す。
+    /// - Parameters:
+    ///   - imageName: 表示画像名。
+    ///   - isEnabled: 操作可能かどうか。
+    ///   - action: タップ時処理。
+    /// - Returns: ボタンView。
+    private func imageButton(imageName: String, isEnabled: Bool, action: @escaping () -> Void) -> some View {
+        Button {
+            action()
+        } label: {
+            Image(imageName)
+                .resizable()
+                .scaledToFit()
+                .frame(
+                    width: buttonImageSize(imageName: imageName).width,
+                    height: buttonImageSize(imageName: imageName).height
+                )
+                .opacity(isEnabled ? 1.0 : 0.45)
+        }
+        .buttonStyle(.plain)
+        .disabled(!isEnabled)
+    }
+
+    /// ボタン画像ごとの見た目サイズ補正値を返す。
+    /// - Parameter imageName: 画像名。
+    /// - Returns: 表示サイズ。
+    private func buttonImageSize(imageName: String) -> CGSize {
+        switch imageName {
+        case "SelectButton":
+            // 元画像の余白が大きいため、視覚サイズが揃うように少し拡大する。
+            CGSize(width: 112, height: 54)
+
+        default:
+            CGSize(width: 86, height: 34)
+        }
     }
 }
