@@ -48,7 +48,7 @@ final class Fising_Touch_GameTests: XCTestCase {
 
     func testSelectingOwnedBaitUpdatesCurrentBait() {
         var initial = GameMaster.initialData
-        initial.ownedBaitIds.append("premium_bait")
+        initial.baitQuantities["premium_bait"] = 1
         let repository = InMemoryRepository(data: initial)
         let store = GameSessionStore(repository: repository)
         let premiumBait = try! XCTUnwrap(GameMaster.bait(id: "premium_bait"))
@@ -56,6 +56,28 @@ final class Fising_Touch_GameTests: XCTestCase {
         store.selectBait(premiumBait)
 
         XCTAssertEqual(store.selectedBait.id, "premium_bait")
+    }
+
+    func testConsumeSelectedBaitDecreasesQuantity() {
+        let repository = InMemoryRepository(data: GameMaster.initialData)
+        let store = GameSessionStore(repository: repository)
+
+        let consumed = store.consumeSelectedBait()
+
+        XCTAssertTrue(consumed)
+        XCTAssertEqual(store.baitCount(baitId: store.selectedBait.id), 0)
+    }
+
+    func testConsumeSelectedBaitFailsWhenQuantityIsZero() {
+        var initial = GameMaster.initialData
+        initial.baitQuantities[initial.selectedBaitId] = 0
+        let repository = InMemoryRepository(data: initial)
+        let store = GameSessionStore(repository: repository)
+
+        let consumed = store.consumeSelectedBait()
+
+        XCTAssertFalse(consumed)
+        XCTAssertFalse(store.canUseSelectedBait)
     }
 }
 
