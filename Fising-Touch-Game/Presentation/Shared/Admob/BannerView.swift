@@ -67,24 +67,25 @@ struct AdmobBannerView: UIViewRepresentable {
       }
 }
 
-/// 画面下部固定に適したアンカーアダプティブバナー広告View。
+/// 画面下部固定に適した標準バナー広告View。
 struct AdmobAnchoredBannerView: View {
-    /// バナー幅の基準にする画面幅。
+    /// 親画面の横幅。
     let width: CGFloat
 
     /// Viewを生成する。
-    /// - Parameter width: バナー幅の基準にする画面幅。
+    /// - Parameter width: 親画面の横幅。
     init(width: CGFloat) {
         self.width = width
     }
 
     var body: some View {
-        let adSize = currentOrientationAnchoredAdaptiveBanner(width: max(width, 320))
+        let adSize = AdSizeBanner
 
         AdmobBannerView(adSize)
             .frame(width: adSize.size.width, height: adSize.size.height)
-            .frame(maxWidth: .infinity)
+            // バナーより少し大きい薄黒い背景で、広告の視認性を確保する。
+            .padding(.horizontal, 10)
             .padding(.vertical, 6)
-            .background(.white.opacity(0.88))
+            .background(.black.opacity(0.18), in: RoundedRectangle(cornerRadius: 8))
     }
 }
