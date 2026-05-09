@@ -1,14 +1,12 @@
-//
-//  Fising_Touch_GameApp.swift
-//  Fising-Touch-Game
-//
-//  Created by kyosuke on 2026/04/16.
-//
-
 import SwiftUI
+import GoogleMobileAds
 
 @main
 struct Fising_Touch_GameApp: App {
+    init() {
+        MobileAds.shared.start()
+        print("✅initial MobileAds")
+    }
     var body: some Scene {
         WindowGroup {
             ContentView()
