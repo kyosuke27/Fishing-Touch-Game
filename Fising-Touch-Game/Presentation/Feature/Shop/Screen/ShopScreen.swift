@@ -124,7 +124,7 @@ private struct ShopBaitCard: View {
     }
     
     var body: some View {
-        VStack{
+        VStack {
             HStack(spacing: 14) {
                 Circle()
                     .fill(Color.white)
@@ -170,7 +170,6 @@ private struct ShopBaitCard: View {
                     Text(bait.description)
                         .font(.subheadline)
                         .foregroundStyle(GameTheme.textSecondary)
-                    
                     
                 }
             }
