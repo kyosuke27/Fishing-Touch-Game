@@ -33,7 +33,7 @@ final class InterstitialViewModel: NSObject, ObservableObject {
         }
     }
 
-    /// ロード済み広告があれば表示し、なければ処理をそのまま続行する。
+    /// ロード済み広告があればそのまま表示し、なければ処理をそのまま続行する。
     /// - Parameter completion: 広告を閉じた後、または広告未ロード時に実行する処理。
     func presentIfAvailable(completion: @escaping () -> Void) {
         guard let interstitialAd else {
@@ -52,6 +52,23 @@ final class InterstitialViewModel: NSObject, ObservableObject {
             completion()
             load()
         }
+    }
+
+    /// 指定した確率でロード済み広告を表示し、抽選に外れた場合は処理をそのまま続行する。
+    /// - Parameters:
+    ///   - probability: 広告表示を試みる確率。0.0〜1.0の範囲で指定し、初期値は30%。
+    ///   - completion: 広告を閉じた後、広告未ロード時、または抽選に外れた時に実行する処理。
+    func presentRandomIfAvailable(probability: Double = 0.3, completion: @escaping () -> Void) {
+        let clampedProbability = min(max(probability, 0), 1)
+
+        // 指定確率に当選した場合だけ、通常の広告表示処理へ進める。
+        guard Double.random(in: 0..<1) < clampedProbability else {
+            completion()
+            load()
+            return
+        }
+
+        presentIfAvailable(completion: completion)
     }
 
     /// 保留中の処理を実行し、次回表示用の広告をロードする。

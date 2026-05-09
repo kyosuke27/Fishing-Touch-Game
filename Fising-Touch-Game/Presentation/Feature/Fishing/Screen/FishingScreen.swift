@@ -49,7 +49,7 @@ struct FishingScreen: View {
                     ResultOverlay(
                         result: result,
                         onRetry: {
-                            interstitialViewModel.presentIfAvailable {
+                            interstitialViewModel.presentRandomIfAvailable {
                                 viewModel.restart()
                                 lastUpdate = nil
                             }
