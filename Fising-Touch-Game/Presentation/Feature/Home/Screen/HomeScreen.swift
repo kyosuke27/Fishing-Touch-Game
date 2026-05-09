@@ -28,21 +28,28 @@ struct HomeScreen: View {
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            homeBackground
-            VStack(spacing: 18) {
-                topStatusRow
-                heroSection
-                startButton
-                progressCard
-                menuGrid
+            GeometryReader { geometry in
+                homeBackground
+                
+                VStack(spacing: 18) {
+                    topStatusRow
+                    heroSection
+                    startButton
+                    progressCard
+                    menuGrid
+                }
+                .frame(width: contentWidth, alignment: .topLeading)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .padding(.top, 18)
+                .padding(.bottom, adOverlayReservedHeight(safeAreaBottom: geometry.safeAreaInsets.bottom))
+                
+                ScreenWidthReader(width: $deviceWidth)
+                    .allowsHitTesting(false)
+                    .overlay(alignment: .bottom) {
+                        AdmobAnchoredBannerView(width: geometry.size.width)
+                            .padding(.bottom, geometry.safeAreaInsets.bottom)
+                    }
             }
-            .frame(width: contentWidth, alignment: .topLeading)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .padding(.top, 18)
-            .padding(.bottom, 28)
-
-            ScreenWidthReader(width: $deviceWidth)
-                .allowsHitTesting(false)
         }
         .navigationBarHidden(true)
     }
@@ -181,5 +188,12 @@ struct HomeScreen: View {
             }
         }
         .padding(.horizontal, 6)
+    }
+    
+    /// 広告オーバーレイにホームメニューが隠れないための予約高さを返す。
+    /// - Parameter safeAreaBottom: 画面下部のセーフエリア余白。
+    /// - Returns: 画面下部に確保する余白の高さ。
+    private func adOverlayReservedHeight(safeAreaBottom: CGFloat) -> CGFloat {
+        96 + safeAreaBottom
     }
 }
