@@ -75,6 +75,23 @@
         }
       }
     },
+    "common.ok" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
     "common.times" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -653,6 +670,40 @@
         }
       }
     },
+    "home.baitSelection.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please select bait."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "餌を選択してください。"
+          }
+        }
+      }
+    },
+    "home.baitSelection.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bait Required"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "餌がありません"
+          }
+        }
+      }
+    },
     "home.menu.encyclopedia" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -751,6 +802,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "現在の餌"
+          }
+        }
+      }
+    },
+    "home.selectedBait.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select bait"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "餌を選択"
           }
         }
       }
