@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		6CC7D8CC2FAAA5BC002C9449 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 6CC7D8CB2FAAA5BC002C9449 /* GoogleMobileAds */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		6CD72FBD2F8FECFE00CDF883 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -29,9 +33,22 @@
 		6CD72FC62F8FECFE00CDF883 /* Fising-Touch-GameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Fising-Touch-GameUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6CD139362FAE138200C56182 /* Exceptions for "Fising-Touch-Game" folder in "Fising-Touch-Game" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 6CD72FAE2F8FECFA00CDF883 /* Fising-Touch-Game */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6CD72FB12F8FECFA00CDF883 /* Fising-Touch-Game */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6CD139362FAE138200C56182 /* Exceptions for "Fising-Touch-Game" folder in "Fising-Touch-Game" target */,
+			);
 			path = "Fising-Touch-Game";
 			sourceTree = "<group>";
 		};
@@ -52,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6CC7D8CC2FAAA5BC002C9449 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +130,7 @@
 			);
 			name = "Fising-Touch-Game";
 			packageProductDependencies = (
+				6CC7D8CB2FAAA5BC002C9449 /* GoogleMobileAds */,
 			);
 			productName = "Fising-Touch-Game";
 			productReference = 6CD72FAF2F8FECFA00CDF883 /* Fising-Touch-Game.app */;
@@ -195,6 +214,9 @@
 			);
 			mainGroup = 6CD72FA62F8FECFA00CDF883;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				6CC7D8CA2FAAA5BC002C9449 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6CD72FB02F8FECFA00CDF883 /* Products */;
 			projectDirPath = "";
@@ -271,6 +293,8 @@
 /* Begin XCBuildConfiguration section */
 		6CD72FCE2F8FECFE00CDF883 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 6CD72FB12F8FECFA00CDF883 /* Fising-Touch-Game */;
+			baseConfigurationReferenceRelativePath = "Config-debug.xcconfig";
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -335,6 +359,8 @@
 		};
 		6CD72FCF2F8FECFE00CDF883 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 6CD72FB12F8FECFA00CDF883 /* Fising-Touch-Game */;
+			baseConfigurationReferenceRelativePath = "Config-prod.xcconfig";
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -400,8 +426,10 @@
 				DEVELOPMENT_TEAM = 93WV698C8R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Fising-Touch-Game/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Touch Fishing";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.simulation-games";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "あなたに合った広告やコンテンツを表示するために、アプリやWebサイトをまたいだ利用状況の確認を許可していただけますか？";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -412,7 +440,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kyosuke.Noguchi.Fising-Touch-Game";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -435,8 +463,10 @@
 				DEVELOPMENT_TEAM = 93WV698C8R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Fising-Touch-Game/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Touch Fishing";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.simulation-games";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "あなたに合った広告やコンテンツを表示するために、アプリやWebサイトをまたいだ利用状況の確認を許可していただけますか？";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -447,7 +477,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kyosuke.Noguchi.Fising-Touch-Game";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -584,6 +614,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6CC7D8CA2FAAA5BC002C9449 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6CC7D8CB2FAAA5BC002C9449 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6CC7D8CA2FAAA5BC002C9449 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6CD72FA72F8FECFA00CDF883 /* Project object */;
 }

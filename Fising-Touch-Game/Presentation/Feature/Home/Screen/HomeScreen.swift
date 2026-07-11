@@ -4,19 +4,29 @@ import SwiftUI
 struct HomeScreen: View {
     /// 釣り画面表示状態。
     @Binding private var isFishingPresented: Bool
+    /// ショップ画面表示状態。
+    @Binding private var isShopPresented: Bool
     /// 共通保存値
     @ObservedObject private var store: GameSessionStore
     /// ホーム画面ViewModel。
     @StateObject private var viewModel: HomeScreenViewModel
     /// 現在のWindowに紐づく画面横幅。
     @State private var deviceWidth: CGFloat = 0
+    /// 餌未選択ダイアログ表示状態。
+    @State private var isBaitSelectionAlertPresented = false
     
     /// Screenを生成する。
     /// - Parameters:
     ///   - store: 共通ストア。
     ///   - isFishingPresented: 釣り画面表示状態。
-    init(store: GameSessionStore, isFishingPresented: Binding<Bool>) {
+    ///   - isShopPresented: ショップ画面表示状態。
+    init(
+        store: GameSessionStore,
+        isFishingPresented: Binding<Bool>,
+        isShopPresented: Binding<Bool>
+    ) {
         self._isFishingPresented = isFishingPresented
+        self._isShopPresented = isShopPresented
         self.store = store
         self._viewModel = StateObject(wrappedValue: HomeScreenViewModel(store: store))
     }
@@ -28,23 +38,42 @@ struct HomeScreen: View {
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            homeBackground
-            VStack(spacing: 18) {
-                topStatusRow
-                heroSection
-                startButton
-                progressCard
-                menuGrid
+            GeometryReader { geometry in
+                homeBackground
+                
+                VStack(spacing: 18) {
+                    topStatusRow
+                    heroSection
+                    startButton
+                    progressCard
+                    menuGrid
+                }
+                .frame(width: contentWidth, alignment: .topLeading)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .padding(.top, 18)
+                .padding(.bottom, adOverlayReservedHeight(safeAreaBottom: geometry.safeAreaInsets.bottom))
+                
+                ScreenWidthReader(width: $deviceWidth)
+                    .allowsHitTesting(false)
+                    .overlay(alignment: .bottom) {
+                        AdmobAnchoredBannerView(width: geometry.size.width)
+                            .padding(.bottom, geometry.safeAreaInsets.bottom)
+                    }
             }
-            .frame(width: contentWidth, alignment: .topLeading)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .padding(.top, 18)
-            .padding(.bottom, 28)
-
-            ScreenWidthReader(width: $deviceWidth)
-                .allowsHitTesting(false)
         }
         .navigationBarHidden(true)
+        .alert(
+            String(localized: "home.baitSelection.title"),
+            isPresented: $isBaitSelectionAlertPresented,
+            actions: {
+                Button(String(localized: "common.ok")) {
+                    isShopPresented = true
+                }
+            },
+            message: {
+                Text(String(localized: "home.baitSelection.message"))
+            }
+        )
     }
     
     /// ホーム専用背景。
@@ -80,10 +109,19 @@ struct HomeScreen: View {
             Spacer()
             StatusCard(
                 title: String(localized: "home.selectedBait"),
-                value: viewModel.state.selectedBaitName,
+                value: selectedBaitStatusText,
                 imageName: store.selectedBait.imageName,
             )
         }
+    }
+
+    /// 選択中餌の表示文言。
+    private var selectedBaitStatusText: String {
+        guard viewModel.state.canStartFishing else {
+            return String(localized: "home.selectedBait.empty")
+        }
+
+        return "\(viewModel.state.selectedBaitName) x\(viewModel.state.selectedBaitCount)"
     }
     
     /// タイトルと主導線のヒーローセクション。
@@ -112,6 +150,11 @@ struct HomeScreen: View {
     /// 釣り開始ボタン。
     private var startButton: some View {
         Button {
+            guard store.consumeSelectedBait() else {
+                isBaitSelectionAlertPresented = true
+                return
+            }
+
             isFishingPresented = true
         } label: {
             ZStack(alignment: .bottomLeading) {
@@ -181,5 +224,12 @@ struct HomeScreen: View {
             }
         }
         .padding(.horizontal, 6)
+    }
+    
+    /// 広告オーバーレイにホームメニューが隠れないための予約高さを返す。
+    /// - Parameter safeAreaBottom: 画面下部のセーフエリア余白。
+    /// - Returns: 画面下部に確保する余白の高さ。
+    private func adOverlayReservedHeight(safeAreaBottom: CGFloat) -> CGFloat {
+        96 + safeAreaBottom
     }
 }

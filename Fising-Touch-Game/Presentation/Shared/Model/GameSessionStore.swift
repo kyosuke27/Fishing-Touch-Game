@@ -17,6 +17,8 @@ final class GameSessionStore: ObservableObject {
     private let purchaseBaitUseCase: PurchaseBaitUseCase
     /// 餌選択UseCase。
     private let selectBaitUseCase: SelectBaitUseCase
+    /// 餌消費UseCase。
+    private let consumeBaitUseCase: ConsumeBaitUseCase
     /// 釣果登録UseCase。
     private let registerCatchUseCase: RegisterCatchUseCase
 
@@ -25,11 +27,13 @@ final class GameSessionStore: ObservableObject {
     ///   - repository: 利用するリポジトリ。
     ///   - purchaseBaitUseCase: 餌購入UseCase。
     ///   - selectBaitUseCase: 餌選択UseCase。
+    ///   - consumeBaitUseCase: 餌消費UseCase。
     ///   - registerCatchUseCase: 釣果登録UseCase。
     init(
         repository: UserGameDataRepository? = nil,
         purchaseBaitUseCase: PurchaseBaitUseCase? = nil,
         selectBaitUseCase: SelectBaitUseCase? = nil,
+        consumeBaitUseCase: ConsumeBaitUseCase? = nil,
         registerCatchUseCase: RegisterCatchUseCase? = nil
     ) {
         let resolvedRepository = repository ?? UserGameDataRepositoryImpl()
@@ -37,6 +41,7 @@ final class GameSessionStore: ObservableObject {
         self.saveUserGameDataUseCase = SaveUserGameDataUseCaseImpl(repository: resolvedRepository)
         self.purchaseBaitUseCase = purchaseBaitUseCase ?? PurchaseBaitUseCaseImpl()
         self.selectBaitUseCase = selectBaitUseCase ?? SelectBaitUseCaseImpl()
+        self.consumeBaitUseCase = consumeBaitUseCase ?? ConsumeBaitUseCaseImpl()
         self.registerCatchUseCase = registerCatchUseCase ?? RegisterCatchUseCaseImpl()
 
         do {
@@ -51,6 +56,11 @@ final class GameSessionStore: ObservableObject {
     /// 現在選択中の餌を返す。
     var selectedBait: BaitMaster {
         GameMaster.bait(id: userData.selectedBaitId) ?? GameMaster.baits[0]
+    }
+
+    /// 選択中の餌で釣りを開始できるか返す。
+    var canUseSelectedBait: Bool {
+        isOwned(baitId: selectedBait.id)
     }
 
     /// 解放済み魚種数を返す。
@@ -94,6 +104,18 @@ final class GameSessionStore: ObservableObject {
 
         userData = updatedData
         persist()
+    }
+
+    /// 選択中の餌を1個消費する。
+    /// - Returns: 消費成功時は`true`。
+    func consumeSelectedBait() -> Bool {
+        guard let updatedData = consumeBaitUseCase.execute(userData: userData, bait: selectedBait) else {
+            return false
+        }
+
+        userData = updatedData
+        persist()
+        return true
     }
 
     /// 釣果を登録する。

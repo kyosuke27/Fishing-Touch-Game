@@ -36,7 +36,7 @@ struct ShopScreen: View {
                             ShopBaitCard(
                                 bait: bait,
                                 quantity: store.baitCount(baitId: bait.id),
-                                isSelected: store.selectedBait.id == bait.id,
+                                isSelected: store.selectedBait.id == bait.id && store.isOwned(baitId: bait.id),
                                 canAfford: store.userData.coin >= bait.price,
                                 onPurchase: {
                                     _ = store.purchaseBait(bait)
@@ -124,7 +124,7 @@ private struct ShopBaitCard: View {
     }
     
     var body: some View {
-        VStack{
+        VStack {
             HStack(spacing: 14) {
                 Circle()
                     .fill(Color.white)
@@ -170,7 +170,6 @@ private struct ShopBaitCard: View {
                     Text(bait.description)
                         .font(.subheadline)
                         .foregroundStyle(GameTheme.textSecondary)
-                    
                     
                 }
             }

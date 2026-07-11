@@ -9,22 +9,31 @@ struct FishingScreen: View {
     @ObservedObject private var store: GameSessionStore
     /// 釣り画面ViewModel。
     @StateObject private var viewModel: FishingScreenViewModel
+    /// 再挑戦時に表示するインタースティシャル広告ViewModel。
+    @StateObject private var interstitialViewModel = InterstitialViewModel()
     /// 前フレーム時刻。
     @State private var lastUpdate: Date?
+    /// 餌未選択ダイアログ表示状態。
+    @State private var isBaitSelectionAlertPresented = false
+    /// 餌選択が必要な時に実行する処理。
+    private let onBaitSelectionRequired: () -> Void
 
     /// 描画更新タイマー。
     private let timer = Timer.publish(every: 1 / 60, on: .main, in: .common).autoconnect()
 
     /// Screenを生成する。
-    /// - Parameter store: 共通ストア。
-    init(store: GameSessionStore) {
+    /// - Parameters:
+    ///   - store: 共通ストア。
+    ///   - onBaitSelectionRequired: 餌選択が必要な時に実行する処理。
+    init(store: GameSessionStore, onBaitSelectionRequired: @escaping () -> Void) {
         self.store = store
+        self.onBaitSelectionRequired = onBaitSelectionRequired
         self._viewModel = StateObject(wrappedValue: FishingScreenViewModel(store: store))
     }
 
     var body: some View {
         GeometryReader { geometry in
-            ZStack {
+            ZStack(alignment: .bottom) {
                 fishingBackground(size: geometry.size)
 
                 VStack(spacing: 22) {
@@ -36,16 +45,26 @@ struct FishingScreen: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 42)
-                .padding(.bottom, 32)
+                .padding(.bottom, adOverlayReservedHeight(safeAreaBottom: geometry.safeAreaInsets.bottom))
                 .frame(width: geometry.size.width, alignment: .topLeading)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+
+                AdmobAnchoredBannerView(width: geometry.size.width)
+                    .padding(.bottom, adOverlayBottomPadding(safeAreaBottom: geometry.safeAreaInsets.bottom))
 
                 if let result = viewModel.state.result {
                     ResultOverlay(
                         result: result,
                         onRetry: {
-                            viewModel.restart()
-                            lastUpdate = nil
+                            guard store.consumeSelectedBait() else {
+                                isBaitSelectionAlertPresented = true
+                                return
+                            }
+
+                            interstitialViewModel.presentRandomIfAvailable {
+                                viewModel.restart()
+                                lastUpdate = nil
+                            }
                         },
                         onClose: {
                             dismiss()
@@ -61,6 +80,22 @@ struct FishingScreen: View {
             lastUpdate = date
             viewModel.update(deltaTime: delta)
         }
+        .onAppear {
+            // 再挑戦時に待ち時間を出さないよう事前ロードする。
+            interstitialViewModel.load()
+        }
+        .alert(
+            String(localized: "home.baitSelection.title"),
+            isPresented: $isBaitSelectionAlertPresented,
+            actions: {
+                Button(String(localized: "common.ok")) {
+                    onBaitSelectionRequired()
+                }
+            },
+            message: {
+                Text(String(localized: "home.baitSelection.message"))
+            }
+        )
     }
 
     /// 釣り画面の背景を表示する。
@@ -147,5 +182,20 @@ struct FishingScreen: View {
             .buttonStyle(.plain)
             .disabled(viewModel.state.result != nil)
         }
+    }
+
+    /// 広告オーバーレイに釣り操作エリアが隠れないための予約高さを返す。
+    /// - Parameter safeAreaBottom: 画面下部のセーフエリア余白。
+    /// - Returns: 画面下部に確保する余白の高さ。
+    private func adOverlayReservedHeight(safeAreaBottom: CGFloat) -> CGFloat {
+        96 + adOverlayBottomPadding(safeAreaBottom: safeAreaBottom)
+    }
+
+    /// 広告オーバーレイの下に確保する余白を返す。
+    /// - Parameter safeAreaBottom: 画面下部のセーフエリア余白。
+    /// - Returns: 広告下部に確保する余白の高さ。
+    private func adOverlayBottomPadding(safeAreaBottom: CGFloat) -> CGFloat {
+        // 全画面表示時もHomeScreenと同じように広告下の余白を残す。
+        max(safeAreaBottom, 12)
     }
 }

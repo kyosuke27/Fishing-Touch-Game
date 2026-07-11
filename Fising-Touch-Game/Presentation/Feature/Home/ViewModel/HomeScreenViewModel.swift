@@ -34,10 +34,15 @@ final class HomeScreenViewModel: ObservableObject {
     /// - Parameter store: 共通ストア。
     /// - Returns: 画面状態。
     private static func makeState(from store: GameSessionStore) -> HomeState {
-        HomeState(
+        let selectedBait = store.selectedBait
+        let selectedBaitCount = store.baitCount(baitId: selectedBait.id)
+
+        return HomeState(
             coin: store.userData.coin,
-            selectedBaitId: store.selectedBait.id,
-            selectedBaitName: store.selectedBait.name,
+            selectedBaitId: selectedBait.id,
+            selectedBaitName: selectedBait.name,
+            selectedBaitCount: selectedBaitCount,
+            canStartFishing: selectedBaitCount > 0,
             unlockedFishCount: store.unlockedFishCount
         )
     }

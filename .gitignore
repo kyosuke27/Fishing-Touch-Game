@@ -83,3 +83,5 @@ img/
 .DS_Store
 memo.md
 appStore/
+*/Config-*
+docs/screenshot/
