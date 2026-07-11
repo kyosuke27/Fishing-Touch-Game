@@ -15,9 +15,9 @@
 - [ディレクトリ構成](#ディレクトリ構成)
 - [設計方針](#設計方針)
 - [工夫したポイント](#工夫したポイント)
+- [関連ドキュメント](#関連ドキュメント)
 - [今後の改善予定](#今後の改善予定)
 - [セットアップ方法](#セットアップ方法)
-- [作者情報](#作者情報)
 
 ---
 
@@ -60,10 +60,13 @@
 - 魚図鑑: 釣った魚の解放状況、最大重量、釣った回数を確認する
 - 釣果履歴: 過去に釣った魚の記録を一覧で確認する
 - 餌ショップ: コインを使って餌を購入し、狙える魚の傾向を変える
+- 餌消費: 釣り開始時に選択中の餌を1個消費し、餌がない場合はショップへ誘導する
 - コイン報酬: 釣った魚に応じてコインを獲得する
 - レアリティ管理: 魚や餌ごとにレアリティを持たせ、収集の楽しさを作る
+- 広告表示: Google Mobile Ads SDKを利用したバナー広告とインタースティシャル広告の土台を実装
+- 画像アセット: ホーム背景、ボタン、魚、餌、コイン、ヒットバーなどの画像をAssets.xcassetsで管理
 
-### MVPで実装した機能
+### 実装した機能
 
 - ホーム画面
 - 釣り画面
@@ -71,7 +74,18 @@
 - 魚図鑑
 - 釣果履歴
 - 餌購入・餌選択
-- ローカル保存
+- 餌所持数管理・餌消費
+- JSONファイルによるローカル保存
+- AdMobバナー広告
+- 確率制御付きインタースティシャル広告
+- 日本語・英語の多言語化リソース
+
+### 現在のマスタデータ
+
+- 魚: 11種
+  - メダカ、フナ、どじょう、キス、アジ、イサキ、スズキ、タイ、カンパチ、マグロ、さめ
+- 餌: 6種
+  - アオイソメ、えび、オキアミ、キビナゴ、アジ、イカの切り身
 
 ### 今後追加したい機能
 
@@ -80,6 +94,7 @@
 - 魚ごとの演出強化
 - 実績・ミッション機能
 - サウンド・振動フィードバック
+- 広告同意管理や本番広告ID運用の整備
 
 ---
 
@@ -113,23 +128,36 @@
 
 ## 技術スタック
 
-| 項目 | 内容 |
-| --- | --- |
-| 言語 | Swift |
-| UI | SwiftUI |
-| アーキテクチャ | MVI / Clean Architecture |
-| 状態管理 | ViewModel / State / ObservableObject |
-| 永続化 | UserDefaults |
-| 多言語化 | Localizable.xcstrings |
-| テスト | XCTest / XCUITest |
-| 開発環境 | Xcode |
+| 項目             | 内容                                 |
+| ---------------- | ------------------------------------ |
+| 言語             | Swift                                |
+| UI               | SwiftUI                              |
+| アーキテクチャ   | MVI / Clean Architecture             |
+| 状態管理         | ViewModel / State / ObservableObject |
+| 永続化           | FileManager / JSON                   |
+| 多言語化         | Localizable.xcstrings                |
+| 広告             | Google Mobile Ads SDK                |
+| プライバシー     | AppTrackingTransparency              |
+| テスト           | XCTest / XCUITest                    |
+| 対応OS           | iOS 17.0以上                         |
+| アプリバージョン | 1.1.0                                |
+| 開発環境         | Xcode                                |
 
 ### 採用理由
 
 - SwiftUI: 状態とUIの関係を宣言的に扱いやすく、画面実装を簡潔に保てるため
 - MVI: Viewからの入力、状態更新、画面反映の流れを明確にするため
 - Clean Architecture: Presentation、Application、Domain、Infrastructureの責務を分離し、変更に強い構成にするため
+- FileManager / JSON: ユーザーデータを`Documents/user_game_data.json`として保存し、データ構造を確認しやすくするため
 - Localizable.xcstrings: 日本語と英語の多言語化を前提に、画面文言をコードから分離するため
+- Google Mobile Ads SDK: バナー広告とインタースティシャル広告の表示基盤をSwiftUIへ組み込むため
+
+### Swift Package Manager
+
+`Package.resolved`で以下のパッケージを固定しています。
+
+- Google Mobile Ads SDK: `swift-package-manager-google-mobile-ads` 13.3.0
+- Google User Messaging Platform: `swift-package-manager-google-user-messaging-platform` 3.1.0
 
 ---
 
@@ -152,6 +180,7 @@ Fising-Touch-Game/
 │   │   ├── Home/
 │   │   └── Shop/
 │   └── Shared/
+│       ├── Admob/
 │       ├── Components/
 │       ├── Model/
 │       └── Theme/
@@ -167,6 +196,8 @@ Fising-Touch-Game/
 - Infrastructure: Repositoryの実装や永続化など、技術詳細を扱う層
 - Presentation: SwiftUIのScreen、ViewModel、State、Componentを配置する層
 - Presentation/Shared: 複数画面で利用する共通Model、Component、Themeを配置する層
+- Presentation/Shared/Admob: AdMobバナー広告とインタースティシャル広告の表示・ロード処理を配置する層
+- Assets.xcassets/img: 魚、餌、ホーム背景、ボタン、コイン、ヒットバーなどの画像素材を配置する領域
 
 ---
 
@@ -212,6 +243,18 @@ PresentationからApplication、ApplicationからDomainへ依存する構成に�
 
 ---
 
+## 関連ドキュメント
+
+- `docs/spec/spec.md`: 初期MVP仕様
+- `docs/spec/task.md`: 実装履歴とビルド確認メモ
+- `docs/spec/bait-inventory/spec.md`: 餌所持数・餌消費仕様
+- `docs/spec/admob-placement/spec.md`: AdMob配置仕様
+- `docs/spec/image-asset-integration/spec.md`: 画像アセット統合仕様
+- `docs/spec/fishing-hit-bar/spec.md`: ヒットバー仕様
+- `docs/spec/result-overlay/spec.md`: リザルト表示仕様
+
+---
+
 ## 今後の改善予定
 
 - 釣り場ごとの魚出現テーブル追加
@@ -220,6 +263,8 @@ PresentationからApplication、ApplicationからDomainへ依存する構成に�
 - UIテストによる主要導線の検証
 - App Store公開に向けたアイコン、スクリーンショット、説明文の整備
 - アクセシビリティ対応の強化
+- Google User Messaging Platformを利用した広告同意フローの実装
+- APIキーや広告IDの環境別設定手順の整備
 
 ---
 
@@ -230,6 +275,8 @@ PresentationからApplication、ApplicationからDomainへ依存する構成に�
 - Xcode
 - iOS Simulatorまたは実機
 - Swift
+- iOS 17.0以上
+- Swift Package Managerで依存パッケージを解決できるネットワーク環境
 
 ### 起動方法
 
@@ -241,16 +288,24 @@ open Fising-Touch-Game.xcodeproj
 
 1. Xcodeで `Fising-Touch-Game.xcodeproj` を開く
 2. 実行対象のSimulatorまたは実機を選択する
-3. Runしてアプリを起動する
+3. Swift Package Managerの依存解決が完了するまで待つ
+4. 必要に応じてAdMob用のBuild Settingsまたはxcconfigで以下の値を設定する
+   - `ADMOB_KEY`
+   - `BANNER_KEY`
+   - `INTER_KEY`
+5. Runしてアプリを起動する
 
----
+### ビルド確認例
 
-## 作者情報
-
-- 名前: あなたの名前
-- GitHub: https://github.com/your-name
-- ポートフォリオ: 必要であれば記載
-- Zenn / Qiita: 必要であれば記載
+```bash
+xcodebuild \
+  -scheme Fising-Touch-Game \
+  -project Fising-Touch-Game.xcodeproj \
+  -destination 'generic/platform=iOS' \
+  -derivedDataPath /tmp/FisingTouchDerived \
+  CODE_SIGNING_ALLOWED=NO \
+  build
+```
 
 ---
 
@@ -260,4 +315,4 @@ open Fising-Touch-Game.xcodeproj
 - 正式なアプリ名をこのまま「ツリゲータッチ」にするか
 - App Store公開予定の有無を記載するか
 - 使用した画像素材やライセンス表記を追加するか
-- 実装済み機能と未実装機能の境界をどこまで明記するか
+- AdMob本番ID、テストID、同意管理の運用方針をどこまで公開するか
