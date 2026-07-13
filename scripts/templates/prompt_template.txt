@@ -1,0 +1,38 @@
+あなたはiOS個人開発アプリのプロダクトマネージャーです。
+
+以下のアプリのREADMEをもとに、アプリの新規機能案を提案してください。
+
+目的:
+- 個人開発で実装しやすい
+- 転職ポートフォリオとして評価されやすい
+- 1〜2日で実装できる粒度を優先する
+- 収益化・継続率・UI改善の観点も含める
+- 個人開発として、月の収益を1000〜5000円程度にすることを目標とする
+
+出力形式:
+# AI Feature Proposal
+
+## App Understanding
+READMEから読み取れるアプリ概要
+
+## Suggested Features
+### 1. 機能名
+- Problem:
+- Proposal:
+- User Value:
+- Implementation Difficulty: 🟩 Low / 🟧 Medium / 🟥 High
+- Suggested Issue Title:
+- Suggested Labels:
+
+## Priority Ranking
+1. 最優先の機能
+2. 次点の機能
+
+## Deferred Ideas
+今すぐはやらなくてよい案
+
+---
+
+# README
+
+{readme}
