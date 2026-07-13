@@ -1,0 +1,54 @@
+name: AI Review
+
+on:
+  push:
+    branches:
+      - main
+      # - feature/**
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install openai
+
+      - name: Run AI review
+        run: |
+          python scripts/ai_review.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
+
+      - name: Create dated branch and commit AI review document
+        run: |
+          DATE="$(TZ=Asia/Tokyo date '+%Y%m%d-%H%M%S')"
+          BRANCH_NAME="ai-review/${DATE}-${GITHUB_RUN_ID}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add docs/review/
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git checkout -b "$BRANCH_NAME"
+          git commit -m "docs: add AI review report ${DATE}"
+          git push --set-upstream origin "$BRANCH_NAME"

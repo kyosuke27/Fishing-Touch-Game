@@ -85,3 +85,6 @@ memo.md
 appStore/
 */Config-*
 docs/screenshot/
+
+# python
+.venv/
