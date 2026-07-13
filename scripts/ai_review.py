@@ -10,6 +10,8 @@ README_PATH = ROOT / "README.md"
 OUTPUT_DIR = ROOT / "docs" / "review"
 LATEST_OUTPUT = OUTPUT_DIR / "latest.md"
 GPT_MODEL = os.environ["OPENAI_MODEL"]
+PROMPT_TEMPLATE_NAME = "prompt_template.txt"
+OUTPUT_FORMAT_TEMPLATE_NAME = "feature_proposal_output_format.txt"
 
 
 def load_readme() -> str:
@@ -28,16 +30,21 @@ def load_readme() -> str:
     return README_PATH.read_text(encoding="utf-8", errors="ignore")
 
 
-def build_prompt(readme: str) -> str:
+def build_prompt(readme: str, output_format: str) -> str:
     """READMEをもとにAIへ渡す機能提案用プロンプトを組み立てる。
 
     Args:
         readme: README.mdの本文。
+        output_format: AIの回答形式を指定するテンプレート本文。
 
     Returns:
         str: OpenAI APIへ送信するプロンプト。
     """
-    return read_template("prompt_template.txt").format(readme=readme)
+    return read_template(PROMPT_TEMPLATE_NAME).format(
+        output_format=output_format,
+        readme=readme,
+    )
+
 
 def analyze(prompt: str) -> str:
     """OpenAI APIでREADME由来の機能提案を生成する。
@@ -93,6 +100,17 @@ Source:
     dated_output.write_text(final_report, encoding="utf-8")
     
 def read_template(template_name: str) -> str:
+    """指定されたテンプレートファイルを読み込む。
+
+    Args:
+        template_name: `scripts/templates`配下のテンプレートファイル名。
+
+    Returns:
+        str: テンプレート本文。
+
+    Raises:
+        FileNotFoundError: テンプレートファイルが存在しない場合。
+    """
     template_file_path = TEMPLATE_PATH / template_name
     if not template_file_path.exists():
         raise FileNotFoundError(f"💣 Template file '{template_name}' not found in '{TEMPLATE_PATH}'")
@@ -108,7 +126,8 @@ def main() -> None:
     """
     print(f"🤖 GPT Model: {GPT_MODEL}")
     readme = load_readme()
-    prompt = build_prompt(readme)
+    output_format = read_template(OUTPUT_FORMAT_TEMPLATE_NAME)
+    prompt = build_prompt(readme, output_format)
     report = analyze(prompt)
     save_report(report)
 

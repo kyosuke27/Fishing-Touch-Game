@@ -1,0 +1,74 @@
+# AI Feature Proposal
+
+## App Understanding
+READMEから読み取れるアプリ概要を3〜5行で要約してください。
+
+## How To Select
+実装する候補は、以下のIssueNoで指定できる形式にしてください。
+
+例:
+- `FP-001`
+- `FP-001, FP-003`
+
+## Suggested Issues
+以下の形式を厳守してください。
+IssueNoは必ず`FP-001`から始め、連番にしてください。
+Issue化しやすいように、各候補は1機能1Issueの粒度にしてください。
+
+<!-- issue:start FP-001 -->
+### IssueNo: FP-001
+- [ ] Select: FP-001
+- Title:
+- Summary:
+- Problem:
+- Proposal:
+- User Value:
+- Implementation Difficulty: Low / Medium / High
+- Priority: P0 / P1 / P2
+- Estimated Scope: 0.5d / 1d / 2d
+- Suggested Issue Title:
+- Suggested Labels:
+- Acceptance Criteria:
+  - 
+- Implementation Notes:
+  - 
+<!-- issue:end FP-001 -->
+
+<!-- issue:start FP-002 -->
+### IssueNo: FP-002
+- [ ] Select: FP-002
+- Title:
+- Summary:
+- Problem:
+- Proposal:
+- User Value:
+- Implementation Difficulty: Low / Medium / High
+- Priority: P0 / P1 / P2
+- Estimated Scope: 0.5d / 1d / 2d
+- Suggested Issue Title:
+- Suggested Labels:
+- Acceptance Criteria:
+  - 
+- Implementation Notes:
+  - 
+<!-- issue:end FP-002 -->
+
+必要に応じてFP-003以降も同じ形式で追加してください。
+提案数は5〜7件にしてください。
+
+## Priority Ranking
+IssueNoで優先順位を書いてください。
+
+例:
+1. FP-001: 理由
+2. FP-002: 理由
+
+## Deferred Ideas
+今すぐIssue化しない案を箇条書きで書いてください。
+
+## Issue Creation Command Example
+ユーザーが次に入力しやすいように、最後に以下の形式で例を出してください。
+
+```text
+create issues: FP-001, FP-003
+```
