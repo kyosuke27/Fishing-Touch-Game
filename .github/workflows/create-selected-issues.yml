@@ -1,0 +1,64 @@
+name: Create Selected Issues
+
+on:
+  workflow_dispatch:
+    inputs: # github Actionsで利用するあちあを入力するための欄を作る
+      proposal_ids:
+        description: "Issue化する提案IDをカンマ区切りで入力"
+        required: true
+        type: string
+
+      proposal_file:
+        description: "提案JSONのパス"
+        required: true
+        default: "docs/review/latest.json"
+        type: string
+
+      dry_run:
+        description: "Issueを作成せず内容だけ確認する"
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  create-issues:
+    name: Create selected GitHub issues
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Create selected issues
+        env:
+          PROPOSAL_FILE: ${{ inputs.proposal_file }}
+          PROPOSAL_IDS: ${{ inputs.proposal_ids }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          echo "Debug inputs"
+          echo "PROPOSAL_FILE=${PROPOSAL_FILE}"
+          echo "PROPOSAL_IDS=${PROPOSAL_IDS}"
+          echo "DRY_RUN=${DRY_RUN}"
+          echo "GITHUB_REPOSITORY=${GITHUB_REPOSITORY}"
+
+          # args=(
+          #   "--file" "$PROPOSAL_FILE"
+          #   "--ids" "$PROPOSAL_IDS"
+          # )
+
+          # if [ "$DRY_RUN" = "true" ]; then
+          #   args+=("--dry-run")
+          # fi
+
+          # python scripts/create_selected_issues.py "${args[@]}"
