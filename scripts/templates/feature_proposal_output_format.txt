@@ -1,74 +1,65 @@
-# AI機能提案
+必ず有効なJSONだけを出力してください。
+Markdown、コードブロック、説明文、前置き、後書きは出力しないでください。
 
-## アプリ理解
-READMEから読み取れるアプリ概要を3〜5行で要約してください。
+JSONのトップレベルは以下の構造にしてください。
 
-## 選択方法
-実装する候補は、以下のIssueNoで指定できる形式にしてください。
+{
+  "title": "AI機能提案",
+  "appUnderstanding": [
+    "READMEから読み取れるアプリ概要を3〜5行で要約してください。"
+  ],
+  "selectionGuide": {
+    "description": "実装する候補はIssueNoで指定できます。",
+    "examples": [
+      "FP-001",
+      "FP-001, FP-003"
+    ]
+  },
+  "issues": [
+    {
+      "issueNo": "FP-001",
+      "selected": false,
+      "featureName": "",
+      "summary": "",
+      "problem": "",
+      "proposal": "",
+      "userValue": "",
+      "implementationDifficulty": "🟩 Low",
+      "priority": "P0",
+      "estimatedScope": "0.5d",
+      "suggestedIssueTitle": "",
+      "suggestedLabels": [
+        "feature"
+      ],
+      "acceptanceCriteria": [
+        ""
+      ],
+      "implementationNotes": [
+        ""
+      ]
+    }
+  ],
+  "priorityRanking": [
+    {
+      "rank": 1,
+      "issueNo": "FP-001",
+      "reason": ""
+    }
+  ],
+  "deferredIdeas": [
+    ""
+  ],
+  "issueCreationCommandExample": "create issues: FP-001, FP-003"
+}
 
-例:
-- `FP-001`
-- `FP-001, FP-003`
-
-## 提案Issue一覧
-以下の形式を厳守してください。
-IssueNoは必ず`FP-001`から始め、連番にしてください。
-Issue化しやすいように、各候補は1機能1Issueの粒度にしてください。
-
-<!-- issue:start FP-001 -->
-### IssueNo: FP-001
-- [ ] 選択: FP-001
-- 機能名:
-- 概要:
-- 課題:
-- 提案内容:
-- ユーザー価値:
-- 実装難易度: 🟩 Low / 🟨 Middle / 🟥 High
-- 優先度: P0 / P1 / P2
-- 想定工数: 0.5d / 1d / 2d
-- Issueタイトル案:
-- ラベル案:
-- 受け入れ条件:
-  - 
-- 実装メモ:
-  - 
-<!-- issue:end FP-001 -->
-
-<!-- issue:start FP-002 -->
-### IssueNo: FP-002
-- [ ] 選択: FP-002
-- 機能名:
-- 概要:
-- 課題:
-- 提案内容:
-- ユーザー価値:
-- 実装難易度: 🟩 Low / 🟨 Middle / 🟥 High
-- 優先度: P0 / P1 / P2
-- 想定工数: 0.5d / 1d / 2d
-- Issueタイトル案:
-- ラベル案:
-- 受け入れ条件:
-  - 
-- 実装メモ:
-  - 
-<!-- issue:end FP-002 -->
-
-必要に応じてFP-003以降も同じ形式で追加してください。
-提案数は5〜7件にしてください。
-
-## 優先順位
-IssueNoで優先順位を書いてください。
-
-例:
-1. FP-001: 理由
-2. FP-002: 理由
-
-## 今回は見送る案
-今すぐIssue化しない案を箇条書きで書いてください。
-
-## Issue作成コマンド例
-ユーザーが次に入力しやすいように、最後に以下の形式で例を出してください。
-
-```text
-create issues: FP-001, FP-003
-```
+出力ルール:
+- `issues`は5〜7件にしてください。
+- `issueNo`は必ず`FP-001`から始め、`FP-002`, `FP-003`のように連番にしてください。
+- `issues`の各要素は1機能1Issueの粒度にしてください。
+- `selected`は必ず`false`にしてください。
+- `implementationDifficulty`は必ず`🟩 Low`、`🟨 Middle`、`🟥 High`のいずれかにしてください。
+- `priority`は必ず`P0`、`P1`、`P2`のいずれかにしてください。
+- `estimatedScope`は必ず`0.5d`、`1d`、`2d`のいずれかにしてください。
+- `suggestedLabels`、`acceptanceCriteria`、`implementationNotes`は必ず文字列配列にしてください。
+- 日本語ユーザーが読みやすいように、値は原則として日本語で書いてください。
+- GitHub Issue作成に使うため、`suggestedIssueTitle`はそのままIssueタイトルに使える短い文にしてください。
