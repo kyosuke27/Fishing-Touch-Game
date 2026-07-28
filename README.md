@@ -55,7 +55,7 @@
 モバゲーの懐かしいガラケーアプリを、現代のスマホアプリとして作ってみたかったことが制作のきっかけです。  
 当時の釣りゲームにあった「少しずつ魚を集める楽しさ」「レアな魚が釣れたときの嬉しさ」「簡単な操作で何度も遊べる手軽さ」を求めて開発しました。
 
-このアプリでは、懐かしさを感じられる見た目や遊び心を残しつつ、SwiftUIによる画面構築、単方向データフローを意識した状態管理、Clean Architectureによる責務分離を取り入れています。
+このアプリでは、懐かしさを感じられる見た目や遊び心を残しつつ、SwiftUIによる画面構築、MVIを意識した状態管理、Clean Architectureによる責務分離を取り入れています。
 
 ---
 
@@ -137,7 +137,7 @@
 | ---------------- | ----------------------------------------- |
 | 言語             | Swift                                     |
 | UI               | SwiftUI                                   |
-| アーキテクチャ   | Clean Architecture / 単方向データフロー  |
+| アーキテクチャ   | Clean Architecture / MVI                  |
 | 状態管理         | ObservableObject / Store / View固有State  |
 | 永続化           | FileManager / JSON                        |
 | 多言語化         | Localizable.xcstrings                     |
@@ -151,7 +151,7 @@
 ### 採用理由
 
 - SwiftUI: 状態とUIの関係を宣言的に扱いやすく、画面実装を簡潔に保てるため
-- 単方向データフロー: Viewからの入力、状態更新、画面反映の流れを明確にするため
+- MVI: Viewから受け取ったEventをもとに状態を更新し、Stateとして画面へ反映する流れを明確にするため
 - Clean Architecture: Presentation、Application、Domain、Infrastructureの責務を分離し、変更に強い構成にするため
 - FileManager / JSON: ユーザーデータを`Documents/user_game_data.json`として保存し、データ構造を確認しやすくするため
 - Localizable.xcstrings: 日本語と英語の多言語化を前提に、画面文言をコードから分離するため
@@ -210,7 +210,7 @@ Fising-Touch-Game/
 
 ### アーキテクチャ
 
-Clean Architectureを基盤にしつつ、SwiftUIと`ObservableObject`を使った単方向データフローで、UI、状態、ユースケース、データ保存の責務を分離しています。
+Clean Architectureを基盤にしつつ、SwiftUIと`ObservableObject`を使ったMVIで、UI、状態、ユースケース、データ保存の責務を分離しています。
 
 ### 状態管理
 
