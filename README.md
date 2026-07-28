@@ -15,6 +15,7 @@
 - [ディレクトリ構成](#ディレクトリ構成)
 - [設計方針](#設計方針)
 - [工夫したポイント](#工夫したポイント)
+- [テスト](#テスト)
 - [関連ドキュメント](#関連ドキュメント)
 - [今後の改善予定](#今後の改善予定)
 - [セットアップ方法](#セットアップ方法)
@@ -25,7 +26,11 @@
 
 ### アプリ名
 
-ツリゲータッチ
+- 日本語名: ツリゲータッチ
+- 英語表示名: Touch Fishing
+- リポジトリ名: Fishing-Touch-Game
+
+> Xcodeプロジェクト名・Target名には、現在 `Fising-Touch-Game` を使用しています。
 
 ### 一言でいうと
 
@@ -50,7 +55,7 @@
 モバゲーの懐かしいガラケーアプリを、現代のスマホアプリとして作ってみたかったことが制作のきっかけです。  
 当時の釣りゲームにあった「少しずつ魚を集める楽しさ」「レアな魚が釣れたときの嬉しさ」「簡単な操作で何度も遊べる手軽さ」を求めて開発しました。
 
-このアプリでは、懐かしさを感じられる見た目や遊び心を残しつつ、SwiftUIによる画面構築、MVIパターン、Clean Architectureを意識した責務分離を取り入れています。
+このアプリでは、懐かしさを感じられる見た目や遊び心を残しつつ、SwiftUIによる画面構築、MVIを意識した状態管理、Clean Architectureによる責務分離を取り入れています。
 
 ---
 
@@ -128,25 +133,25 @@
 
 ## 技術スタック
 
-| 項目             | 内容                                 |
-| ---------------- | ------------------------------------ |
-| 言語             | Swift                                |
-| UI               | SwiftUI                              |
-| アーキテクチャ   | MVI / Clean Architecture             |
-| 状態管理         | ViewModel / State / ObservableObject |
-| 永続化           | FileManager / JSON                   |
-| 多言語化         | Localizable.xcstrings                |
-| 広告             | Google Mobile Ads SDK                |
-| プライバシー     | AppTrackingTransparency              |
-| テスト           | XCTest / XCUITest                    |
-| 対応OS           | iOS 17.0以上                         |
-| アプリバージョン | 1.1.0                                |
-| 開発環境         | Xcode                                |
+| 項目             | 内容                                      |
+| ---------------- | ----------------------------------------- |
+| 言語             | Swift                                     |
+| UI               | SwiftUI                                   |
+| アーキテクチャ   | Clean Architecture / MVI                  |
+| 状態管理         | ObservableObject / Store / View固有State  |
+| 永続化           | FileManager / JSON                        |
+| 多言語化         | Localizable.xcstrings                     |
+| 広告             | Google Mobile Ads SDK                     |
+| プライバシー     | AppTrackingTransparency                   |
+| テスト           | XCTest / XCUITest                         |
+| 対応OS           | iOS 17.0以上                              |
+| アプリバージョン | 1.1.0                                     |
+| 開発環境         | Xcode                                     |
 
 ### 採用理由
 
 - SwiftUI: 状態とUIの関係を宣言的に扱いやすく、画面実装を簡潔に保てるため
-- MVI: Viewからの入力、状態更新、画面反映の流れを明確にするため
+- MVI: Viewから受け取ったEventをもとに状態を更新し、Stateとして画面へ反映する流れを明確にするため
 - Clean Architecture: Presentation、Application、Domain、Infrastructureの責務を分離し、変更に強い構成にするため
 - FileManager / JSON: ユーザーデータを`Documents/user_game_data.json`として保存し、データ構造を確認しやすくするため
 - Localizable.xcstrings: 日本語と英語の多言語化を前提に、画面文言をコードから分離するため
@@ -194,7 +199,7 @@ Fising-Touch-Game/
 - Application: UseCaseとRepositoryのインターフェースを配置する層
 - Domain: 魚、餌、釣果、ユーザーデータなどのEntityを配置する層
 - Infrastructure: Repositoryの実装や永続化など、技術詳細を扱う層
-- Presentation: SwiftUIのScreen、ViewModel、State、Componentを配置する層
+- Presentation: SwiftUIのScreen、画面固有State、Componentを配置する層
 - Presentation/Shared: 複数画面で利用する共通Model、Component、Themeを配置する層
 - Presentation/Shared/Admob: AdMobバナー広告とインタースティシャル広告の表示・ロード処理を配置する層
 - Assets.xcassets/img: 魚、餌、ホーム背景、ボタン、コイン、ヒットバーなどの画像素材を配置する領域
@@ -205,19 +210,25 @@ Fising-Touch-Game/
 
 ### アーキテクチャ
 
-MVIパターンとClean Architectureを組み合わせ、UI、状態、ユースケース、データ保存の責務を分離しています。
+Clean Architectureを基盤にしつつ、SwiftUIと`ObservableObject`を使ったMVIで、UI、状態、ユースケース、データ保存の責務を分離しています。
 
 ### 状態管理
 
-- Screen: ViewModelのStateを購読し、画面表示とユーザー操作を担当する
-- ViewModel: ユーザー操作を受け取り、UseCaseを呼び出してStateを更新する
-- State: 画面に必要な表示状態を表現する
-- UseCase: 釣果登録、餌購入、保存、読み込みなどのアプリケーションロジックを担当する
+- `GameSessionStore`: アプリ全体で共有するゲーム状態を管理し、UseCaseを呼び出して状態を更新する
+- Screen: Storeの状態を購読し、画面表示とユーザー操作を担当する
+- View固有State: 画面表示、Navigation、モーダル、アラートなど、その画面だけで必要な状態を管理する
+- UseCase: 釣果登録、餌購入、餌選択、餌消費、保存、読み込みなどのアプリケーションロジックを担当する
 - Repository: データ保存方法を抽象化し、Infrastructure側の実装へ依存を閉じ込める
 
 ### 依存方向
 
 PresentationからApplication、ApplicationからDomainへ依存する構成にし、Infrastructureの実装詳細が画面側へ漏れないようにしています。
+
+### 依存性注入
+
+外部DIライブラリは使用せず、Initializer Injectionを採用しています。
+
+`GameSessionStore`の初期化時にRepositoryやUseCaseを差し替えられるため、本番環境ではFileManagerを使ったRepository実装、Unit TestではInMemory Repositoryを利用できます。
 
 ---
 
@@ -237,9 +248,50 @@ PresentationからApplication、ApplicationからDomainへ依存する構成に�
 
 ### 保守性
 
-- Screen、ViewModel、State、Componentを分割し、画面の肥大化を防止
+- アプリ全体の共有状態と画面固有の表示状態を分け、責務を明確化
 - UseCaseを機能単位で分割し、テストしやすい粒度に整理
 - 共通UIはPresentation/Shared/Componentsへ配置し、重複実装を避ける
+- RepositoryとUseCaseをInitializer Injectionで差し替え可能にし、テスト容易性を確保
+
+### App Tracking Transparency
+
+アプリがアクティブになったタイミングで、`ATTrackingManager.requestTrackingAuthorization`を呼び出します。
+
+許可状態は以下に分けて処理しています。
+
+- 未選択
+- 制限
+- 拒否
+- 許可
+
+---
+
+## テスト
+
+現在、以下の動作をXCTestで確認しています。
+
+- 餌購入時のコイン消費と所持数更新
+- 所持済み餌の選択
+- 餌消費による所持数減少
+- 餌の所持数が0の場合の失敗
+- 釣果履歴への登録
+- 魚図鑑の解放
+- 最大重量の更新
+- 報酬コインの加算
+- 新種・新記録判定
+
+テストでは`UserGameDataRepository`のInMemory実装を使用し、実ファイルへ依存せず状態遷移を検証しています。
+
+### テスト実行例
+
+```bash
+xcodebuild test \
+  -scheme Fising-Touch-Game \
+  -project Fising-Touch-Game.xcodeproj \
+  -destination 'platform=iOS Simulator,name=iPhone 16'
+```
+
+Simulator名は、利用している環境に合わせて変更してください。
 
 ---
 
@@ -265,6 +317,7 @@ PresentationからApplication、ApplicationからDomainへ依存する構成に�
 - アクセシビリティ対応の強化
 - Google User Messaging Platformを利用した広告同意フローの実装
 - APIキーや広告IDの環境別設定手順の整備
+- ATT許可前の説明画面の追加
 
 ---
 
@@ -281,8 +334,8 @@ PresentationからApplication、ApplicationからDomainへ依存する構成に�
 ### 起動方法
 
 ```bash
-git clone https://github.com/your-name/Fising-Touch-Game.git
-cd Fising-Touch-Game
+git clone https://github.com/kyosuke27/Fishing-Touch-Game.git
+cd Fishing-Touch-Game
 open Fising-Touch-Game.xcodeproj
 ```
 
@@ -306,13 +359,3 @@ xcodebuild \
   CODE_SIGNING_ALLOWED=NO \
   build
 ```
-
----
-
-## README記入時の確認事項
-
-- スクリーンショット画像を追加するか
-- 正式なアプリ名をこのまま「ツリゲータッチ」にするか
-- App Store公開予定の有無を記載するか
-- 使用した画像素材やライセンス表記を追加するか
-- AdMob本番ID、テストID、同意管理の運用方針をどこまで公開するか
